@@ -1,0 +1,4 @@
+Defaults    env_keep += "EDITOR PATH"
+
+## Allows to use password only once for wheel group
+Defaults:%wheel !tty_tickets,timestamp_timeout=500
