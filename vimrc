@@ -131,10 +131,10 @@ set wildmenu
 set spelllang=it
 
 " Shortcuts
-noremap <F10> :Lex <CR>
 noremap <F9>  :set spell! spell?<CR>
 noremap <F8>  :set list! list?<CR>
 noremap <F7>  :set rnu! rnu?<CR>
 noremap <F6>  :set nu! nu?<CR>
 noremap <F5>  :syntax sync fromstart<CR>
 noremap <F4>  :noh<CR>
+noremap <F3> :Lex <CR>
