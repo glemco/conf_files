@@ -137,4 +137,4 @@ noremap <F7>  :set rnu! rnu?<CR>
 noremap <F6>  :set nu! nu?<CR>
 noremap <F5>  :syntax sync fromstart<CR>
 noremap <F4>  :noh<CR>
-noremap <F3> :Lex <CR>
+noremap <F3>  :Lex <CR>
