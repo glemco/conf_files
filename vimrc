@@ -120,6 +120,10 @@ set backupdir=~/.vim/tmp/bak//
 set undodir=~/.vim/tmp/un//
 set directory=~/.vim/tmp/swp//
 
+" Split new windows
+set splitright
+"set splitbelow
+
 " Personal tab indentation
 set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 
