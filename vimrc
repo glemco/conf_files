@@ -132,7 +132,10 @@ set wildmode=longest,full
 set wildmenu
 
 " Spell check language
-set spelllang=it
+"set spelllang=it
+
+" Better consistency for yank
+map Y y$
 
 " Shortcuts
 noremap <F9>  :set spell! spell?<CR>
