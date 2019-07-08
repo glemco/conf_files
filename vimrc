@@ -1,13 +1,6 @@
-" An example for a vimrc file.
-"
-" Maintainer:	Bram Moolenaar <Bram@vim.org>
-" Last change:	2016 Apr 05
-"
-" To use it, copy it to
-"     for Unix and OS/2:  ~/.vimrc
-"	      for Amiga:  s:.vimrc
-"  for MS-DOS and Win32:  $VIM\_vimrc
-"	    for OpenVMS:  sys$login:.vimrc
+if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
+   set fileencodings=ucs-bom,utf-8,latin1
+endif
 
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
@@ -52,7 +45,6 @@ endif
 if &t_Co > 2 || has("gui_running")
   syntax on
   syntax sync minlines=200 "to correct errors
-  colorscheme slate
 
   " Also switch on highlighting the last used search pattern.
   set hlsearch
@@ -108,6 +100,9 @@ if has('langmap') && exists('+langnoremap')
   set langnoremap
 endif
 
+" Don't wake up system with blinking cursor:
+" http://www.linuxpowertop.org/known.php
+let &guicursor = &guicursor . ",a:blinkon0"
 
 " Add optional packages.
 "
