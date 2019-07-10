@@ -115,19 +115,24 @@ set backupdir=~/.vim/tmp/bak//
 set undodir=~/.vim/tmp/un//
 set directory=~/.vim/tmp/swp//
 
-" Split new windows
-set splitright
-"set splitbelow
+" Show hidden characters
+set listchars+=tab:..\|,trail:#,extends:>,precedes:<,space:·
 
 " Personal tab indentation
-set tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
 " Command completion
 set wildmode=longest,full
 set wildmenu
 
+" Better vertical split
+set splitright
+
 " Spell check language
-"set spelllang=it
+"set spelllang=en
+
+" May give some troubles
+set nomodeline
 
 " Better consistency for yank
 map Y y$
@@ -139,4 +144,4 @@ noremap <F7>  :set rnu! rnu?<CR>
 noremap <F6>  :set nu! nu?<CR>
 noremap <F5>  :syntax sync fromstart<CR>
 noremap <F4>  :noh<CR>
-noremap <F3>  :Lex <CR>
+noremap <F3>  :Lex<CR>
