@@ -9,9 +9,18 @@ endif
 
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
-set nocompatible
+" Avoid side effects when it was already reset.
+if &compatible
+  set nocompatible
+endif
 
-" allow backspacing over everything in insert mode
+" When the +eval feature is missing, the set command above will be skipped.
+" Use a trick to reset compatible only when the +eval feature is missing.
+silent! while 0
+  set nocompatible
+silent! endwhile
+
+" Allow backspacing over everything in insert mode.
 set backspace=indent,eol,start
 
 if has("vms")
@@ -23,10 +32,7 @@ endif
 set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
-
-" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
-" let &guioptions = substitute(&guioptions, "t", "", "g")
+set wildmenu		" display completion matches in a status line
 
 " Don't use Ex mode, use Q for formatting
 map Q gq
@@ -40,17 +46,9 @@ if has('mouse')
   set mouse=a
 endif
 
-" Switch syntax highlighting on when the terminal has colors or when using the
-" GUI (which always has colors).
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  syntax sync minlines=200 "to correct errors
-
-  " Also switch on highlighting the last used search pattern.
-  set hlsearch
-
-  " I like highlighting strings inside C comments.
-  let c_comment_strings=1
+" Do incremental searching when it's possible to timeout.
+if has('reltime')
+  set incsearch
 endif
 
 " Only do this part when compiled with support for autocommands.
@@ -73,10 +71,16 @@ if has("autocmd")
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
   autocmd BufReadPost *
-    \ if line("'\"") >= 1 && line("'\"") <= line("$") |
-    \   exe "normal! g`\"" |
-    \ endif
-
+  \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+  \   exe "normal! g'\"" |
+  \ endif
+  " don't write swapfile on most commonly used directories for NFS mounts or USB sticks
+  autocmd BufNewFile,BufReadPre /media/*,/run/media/*,/mnt/* set directory=~/tmp,/var/tmp,/tmp
+  " start with spec file template
+  " 1724126 - do not open new file with .spec suffix with spec file template
+  " apparently there are other file types with .spec suffix, so disable the
+  " template
+  " autocmd BufNewFile *.spec 0r /usr/share/vim/vimfiles/template.spec
   augroup END
 
 else
@@ -85,19 +89,50 @@ else
 
 endif " has("autocmd")
 
+if has("cscope") && filereadable("/usr/bin/cscope")
+   set csprg=/usr/bin/cscope
+   set csto=0
+   set cst
+   set nocsverb
+   " add any database in current directory
+   if filereadable("cscope.out")
+      cs add $PWD/cscope.out
+   " else add database pointed to by environment
+   elseif $CSCOPE_DB != ""
+      cs add $CSCOPE_DB
+   endif
+   set csverb
+endif
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+  " Revert with ":syntax off".
+  syntax on
+  "syntax sync minlines=200 "to correct errors
+
+  " I like highlighting strings inside C comments.
+  " Revert with ":unlet c_comment_strings".
+  let c_comment_strings=1
+  " Also switch on highlighting the last used search pattern.
+  set hlsearch
+endif
+
+
 " Convenient command to see the difference between the current buffer and the
 " file it was loaded from, thus the changes you made.
 " Only define it when not defined already.
+" Revert with: ":delcommand DiffOrig".
 if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
 		  \ | wincmd p | diffthis
 endif
 
-if has('langmap') && exists('+langnoremap')
+if has('langmap') && exists('+langremap')
   " Prevent that the langmap option applies to characters that result from a
-  " mapping.  If unset (default), this may break plugins (but it's backward
+  " mapping.  If set (default), this may break plugins (but it's backward
   " compatible).
-  set langnoremap
+  set nolangremap
 endif
 
 " Don't wake up system with blinking cursor:
@@ -127,6 +162,7 @@ set wildmenu
 
 " Better vertical split
 set splitright
+"set splitbelow
 
 " Spell check language
 "set spelllang=en
@@ -136,6 +172,11 @@ set nomodeline
 
 " Better consistency for yank
 map Y y$
+
+" Smarter diff recognition
+if has('nvim-0.3.2') || has("patch-8.1.0360")
+  set diffopt=filler,internal,algorithm:histogram,indent-heuristic
+endif
 
 " Shortcuts
 noremap <F9>  :set spell! spell?<CR>
