@@ -1,0 +1,6 @@
+[submodule "vim/pack/all/start/vim-templates"]
+	path = vim/pack/all/start/vim-templates
+	url = https://github.com/tibabit/vim-templates
+[submodule "vim/pack/all/start/markdown-preview"]
+	path = vim/pack/all/start/markdown-preview
+	url = https://github.com/iamcco/markdown-preview.nvim
