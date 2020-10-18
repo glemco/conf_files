@@ -4,3 +4,6 @@
 [submodule "vim/pack/all/start/markdown-preview"]
 	path = vim/pack/all/start/markdown-preview
 	url = https://github.com/iamcco/markdown-preview.nvim
+[submodule "vim/pack/all/start/lightline"]
+	path = vim/pack/all/start/lightline
+	url = https://github.com/itchyny/lightline.vim

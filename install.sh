@@ -21,30 +21,50 @@ for line in $(cat files.yaml); do
 	#TODO improve behaviour for those two..
 	[ `grep -E "^~" <<< "$location"` ] && location="$HOME""$(tr -d '~' <<< $location)" || SUDO="sudo"
 	REC=$([ `grep -E "/$" <<< "$location"` ] && echo "-r" || echo "")
+	location=$(sed 's~/$~~' <<< $location)
 
-	if $SUDO diff -q $file $location &> /dev/null ; then
+	if $SUDO diff -q $file $location &> /dev/null && [ "$REC" == "" ]; then
 		echo "Your $FCOL$file$RST is already up to date!"
 		continue
 	fi
-	echo -n "Do you want to accept the changes to $FCOL$file$RST \
-(${GREEN}y$RST/[${RED}n$RST]) or review (${YELLOW}e$RST)? Type (${PURPLE}q$RST) to exit. "
-	read answer
-	echo $location
-	if [ "$answer" == "y" ]; then
-		echo "Copying $file to $location and saving a backup in $location.bak"
-		if [ -f $location ]; then
-			$SUDO cp $REC "$location" "$location".bak
-		fi
-		$SUDO cp $REC "$file" "$location"
-	elif [ "$answer" == "n" ]; then
-		echo "Skipping.."
-	elif [ "$answer" == "" ]; then
-		echo "Selected n. Skipping.."
-	elif [ "$answer" == "e" ]; then
-		$SUDO vimdiff "$file" "$location"
-	elif [ "$answer" == "q" ]; then
-		exit
-	else
-		echo "Choose either y, n or e"
+	if [ -L "$location" ]; then
+		echo "Your $FCOL$file$RST is already a symlink, skipping.."
+		continue
 	fi
+	echo -n "Do you want to accept the changes to $FCOL$file$RST \
+(${GREEN}y$RST/[${RED}n$RST]), symlink (${BLUE}s${RST}) or review (${YELLOW}e$RST)? \
+Type (${PURPLE}q$RST) to exit. "
+	read answer
+	case "$answer" in
+		y)
+			echo "Copying $file to $location"
+			if [ -f $location ] || [ -d $location ]; then
+				echo "Creating a backup in $location.bak"
+				$SUDO cp $REC "$location" "$location".bak
+			fi
+			$SUDO cp $REC "$file" "$location"
+			;;
+		n)
+			echo "Skipping.."
+			;;
+		"")
+			echo "Selected n. Skipping.."
+			;;
+		e)
+			$SUDO vimdiff "$file" "$location"
+			;;
+		q)
+			exit
+			;;
+		s)
+			echo "Linking $file to $location"
+			if [ -f $location ] || [ -d $location ]; then
+				echo "Creating a backup in $location.bak"
+				$SUDO mv "$location" "$location".bak
+			fi
+			$SUDO ln -sf `realpath "$file"` "$location" 
+			;;
+		*)
+			echo "Choose either y, n or e"
+	esac
 done

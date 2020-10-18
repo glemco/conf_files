@@ -1,0 +1,17 @@
+#! /usr/bin/python3
+
+######################################################################
+# @author      : {{NAME}} ({{EMAIL}})
+# @file        : {{FILE}}
+# @created     : {{TIMESTAMP}}
+#
+# @description : {{CURSOR}}
+######################################################################
+
+""" Main module """
+
+def main():
+    """ Main function """
+
+if __name__ == "__main__":
+    main()

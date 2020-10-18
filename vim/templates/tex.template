@@ -1,0 +1,21 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% @author      : {{NAME}} ({{EMAIL}})
+% @file        : {{FILE}}
+% @created     : {{TIMESTAMP}}
+%
+% @description : {{CURSOR}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt]{article}
+
+\usepackage[margin=2cm]{geometry}
+
+\begin{document}
+
+\title{{{FILE}}}
+\author{{{NAME}}}
+%\date{} % empty date
+
+\maketitle
+
+\end{document}

@@ -145,10 +145,10 @@ let &guicursor = &guicursor . ",a:blinkon0"
 " compatible.
 packadd matchit
 
-" All almost useless files together
-set backupdir=~/.vim/tmp/bak//
-set undodir=~/.vim/tmp/un//
-set directory=~/.vim/tmp/swp//
+" All maintenance files together, leave in cwd if the folder is not there
+set backupdir=~/.vim/tmp/bak//,.
+set undodir=~/.vim/tmp/un//,.
+set directory=~/.vim/tmp/swp//,.
 
 " Show hidden characters
 set listchars+=tab:..\|,trail:#,extends:>,precedes:<,space:·
@@ -178,6 +178,9 @@ if has('nvim-0.3.2') || has("patch-8.1.0360")
   set diffopt=filler,internal,algorithm:histogram,indent-heuristic
 endif
 
+" Statusbar also with one window open
+set laststatus=2
+
 " Shortcuts
 noremap <F9>  :set spell! spell?<CR>
 noremap <F8>  :set list! list?<CR>
@@ -186,3 +189,7 @@ noremap <F6>  :set nu! nu?<CR>
 noremap <F5>  :syntax sync fromstart<CR>
 noremap <F4>  :noh<CR>
 noremap <F3>  :Lex<CR>
+
+" Templates engine
+let g:tmpl_search_paths = ['~/.vim/templates']
+let g:tmpl_author_name = "Gabriele Monaco"

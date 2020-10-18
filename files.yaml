@@ -1,5 +1,6 @@
 bashrc: ~/.bashrc
 inputrc: ~/.inputrc
+pylintrc: ~/.pylintrc
 persistent_access: /etc/sudoers.d/persistent_access
 vimrc: ~/.vimrc
 vim: ~/.vim/
