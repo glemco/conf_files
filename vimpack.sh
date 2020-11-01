@@ -1,7 +1,7 @@
 #! /usr/bin/sh
 
 function usage {
-	echo "Usage `basename $0` [-o] install|remove|update|list|local-install [arguments]"
+	echo "Usage `basename $0` [-o] install|remove|update|list|local-install|load|unload [arguments]"
 	exit 1
 }
 
@@ -9,15 +9,17 @@ if [ $# -lt 1 ]; then
 	usage
 fi
 
-PACKDIR="vim/pack/all/start/"
+PACKDIRSTART="vim/pack/all/start/"
+PACKDIROPT="vim/pack/all/opt/"
+PACKDIR=$PACKDIRSTART
 
 if [ "$1" == "-o" ]; then
-	PACKDIR="vim/pack/all/opt/"
+	PACKDIR=$PACKDIROPT
 	shift
 fi
 
 case "$1" in
-	install)
+	install|in)
 		if [ $# -lt 2 ]; then
 			echo "Usage $0 $1 url [module-name]"
 			exit 2
@@ -29,8 +31,9 @@ case "$1" in
 			module="$3"
 		fi
 		git submodule add $url ${PACKDIR}"$module"
+		vim -c"helptags ALL" -c"q"
 		;;
-	remove)
+	remove|rm)
 		if [ $# -lt 2 ]; then
 			echo "Usage $0 $1 module-name"
 			exit 2
@@ -41,14 +44,16 @@ case "$1" in
 			exit 3
 		fi
 		git rm -f ${PACKDIR}"$module"
+		vim -c"helptags ALL" -c"q"
 		;;
 	update)
 		if [ $# -ge 2 ]; then
 			pack=${PACKDIR}"$2"
 		fi
 		git submodule update --remote $pack
+		vim -c"helptags ALL" -c"q"
 		;;
-	list)
+	list|ls)
 		ls -1 ${PACKDIR}
 		;;
 	local-install)
@@ -62,6 +67,30 @@ case "$1" in
 			rm -rv ~/.$PACKDIR*
 			cp -rv $PACKDIR* ~/.$PACKDIR
 		fi
+		;;
+	unload)
+		if [ $# -lt 2 ]; then
+			echo "Usage $0 $1 module-name"
+			exit 2
+		fi
+		module="$2"
+		if [ ! -d ${PACKDIRSTART}$module ]; then
+			echo "Module $module doesn't exist in autoload folder"
+			exit 3
+		fi
+		git mv ${PACKDIRSTART}"$module" ${PACKDIROPT}"$module"
+		;;
+	load)
+		if [ $# -lt 2 ]; then
+			echo "Usage $0 $1 module-name"
+			exit 2
+		fi
+		module="$2"
+		if [ ! -d ${PACKDIROPT}$module ]; then
+			echo "Module $module doesn't exist in optional folder"
+			exit 3
+		fi
+		git mv ${PACKDIROPT}"$module" ${PACKDIRSTART}"$module"
 		;;
 	*)
 		usage

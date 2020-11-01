@@ -1,5 +1,8 @@
 # .bashrc
 
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
@@ -19,11 +22,24 @@ CYAN="\[$(tput setaf 6)\]"
 BOLD="\[$(tput bold)\]"
 BLINK="\[$(tput blink)\]"
 RESET="\[$(tput sgr0)\]"
-#PS1="\$([ \$? != 0 ] && echo -e '${BOLD}${RED}:(\n\n${RESET}')"
 export PS1="${CYAN}[${CYAN}${BOLD}\u${RESET}${BLUE}@${CYAN}${BOLD}\h ${BLUE}\W${RESET}${CYAN}]${GREEN}${BOLD}\\$ ${RESET}"
 export HISTCONTROL+=":ignorespace"
 export EDITOR="/usr/bin/vim"
 export MERGE="vimdiff"
 export PYTHONPATH="."
 
+# Source fuzzy find bindings
+if [ -f /usr/share/fzf/shell/key-bindings.bash ] ; then
+	. /usr/share/fzf/shell/key-bindings.bash
+fi
+if [ -f /usr/share/fzf/key-bindings.bash ] ||
+	[ -f /usr/share/fzf/completion.bash ] ; then
+	. /usr/share/fzf/key-bindings.bash 2> /dev/null | true
+	. /usr/share/fzf/completion.bash 2> /dev/null | true
+fi #for archlinux (or general, never fail)
+
+alias xopen=xdg-open
+
 #xhost +local: &> /dev/null
+export PATH+=':/opt/Xilinx/Vivado/2020.1/bin'
+alias vivado='vivado -mode tcl'
