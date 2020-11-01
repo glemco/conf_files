@@ -7,12 +7,6 @@
 #ifndef _{{MACRO_GUARD}}
 #define _{{MACRO_GUARD}}
 
-class {{CLASS}} {
-    public:
-        {{CLASS}} ({{CURSOR}});
-        virtual ~{{CLASS}} ();
-    private:
-        /* private data */
-};
+{{CURSOR}}
 
 #endif // _{{MACRO_GUARD}}

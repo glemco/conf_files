@@ -165,7 +165,7 @@ set splitright
 "set splitbelow
 
 " Spell check language
-"set spelllang=en
+set spelllang=en
 
 " May give some troubles
 set nomodeline
@@ -180,16 +180,20 @@ endif
 
 " Statusbar also with one window open
 set laststatus=2
+"set showtabline=2
 
 " Shortcuts
-noremap <F9>  :set spell! spell?<CR>
-noremap <F8>  :set list! list?<CR>
-noremap <F7>  :set rnu! rnu?<CR>
-noremap <F6>  :set nu! nu?<CR>
-noremap <F5>  :syntax sync fromstart<CR>
-noremap <F4>  :noh<CR>
-noremap <F3>  :Lex<CR>
+nnoremap <F9>  :set spell! spell?<CR>
+nnoremap <F8>  :set list! list?<CR>
+nnoremap <F7>  :set rnu! rnu?<CR>
+nnoremap <F6>  :set nu! nu?<CR>
+nnoremap <F5>  :syntax sync fromstart<CR>
+nnoremap <F4>  :noh<CR>
+nnoremap <F3>  :Lex<CR>
 
-" Templates engine
-let g:tmpl_search_paths = ['~/.vim/templates']
-let g:tmpl_author_name = "Gabriele Monaco"
+nnoremap <Leader>]  :!ctags -R<CR>
+vnoremap <Leader>c  y :!bash -c "echo '"' \| xclip -sel clip"<CR>
+
+if filereadable('/home/'.$USER.'/.vim/packs.vim')
+	source /home/$USER/.vim/packs.vim
+endif
