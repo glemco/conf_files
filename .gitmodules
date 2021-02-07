@@ -16,3 +16,9 @@
 [submodule "vim/pack/all/opt/vim-mundo"]
 	path = vim/pack/all/opt/vim-mundo
 	url = https://github.com/simnalamburt/vim-mundo.git
+[submodule "vim/pack/all/opt/litecorrect"]
+	path = vim/pack/all/opt/litecorrect
+	url = https://github.com/reedes/vim-litecorrect
+[submodule "vim/pack/all/start/sleuth"]
+	path = vim/pack/all/start/sleuth
+	url = https://github.com/tpope/vim-sleuth
