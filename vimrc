@@ -191,8 +191,8 @@ nnoremap <F5>  :syntax sync fromstart<CR>
 nnoremap <F4>  :noh<CR>
 nnoremap <F3>  :Lex<CR>
 
-nnoremap <Leader>]  :!ctags -R<CR>
-vnoremap <Leader>c  y :!bash -c "echo '"' \| xclip -sel clip"<CR>
+nnoremap <Leader>]  :call system('ctags -R')<CR>
+vnoremap <Leader>c  "cy :call system('xclip -sel clip', @c)<CR>
 
 if filereadable('/home/'.$USER.'/.vim/packs.vim')
 	source /home/$USER/.vim/packs.vim

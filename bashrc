@@ -38,8 +38,27 @@ if [ -f /usr/share/fzf/key-bindings.bash ] ||
 	. /usr/share/fzf/completion.bash 2> /dev/null | true
 fi #for archlinux (or general, never fail)
 
+if type fd &> /dev/null; then
+    export FZF_DEFAULT_COMMAND='fd --follow'
+else
+	FZF_MAX_DEPTH=6
+	export FZF_DEFAULT_COMMAND="command find -L . -depth -mindepth 1 -maxdepth $FZF_MAX_DEPTH \
+		\\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) \
+		-prune \
+		-o -type f -print \
+		-o -type d -print \
+		-o -type l -print 2> /dev/null | cut -b3-"
+fi
+export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
+_fzf_compgen_path() {
+  $FZF_DEFAULT_COMMAND . "$1"
+}
+_fzf_compgen_dir() {
+  $FZF_DEFAULT_COMMAND --type d . "$1"
+}
+
 alias xopen=xdg-open
 
-#xhost +local: &> /dev/null
-export PATH+=':/opt/Xilinx/Vivado/2020.1/bin'
-alias vivado='vivado -mode tcl'
+if type flatpak &> /dev/null; then
+	export PATH+=':/var/lib/flatpak/exports/bin/'
+fi

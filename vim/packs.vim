@@ -113,3 +113,9 @@ endfunction
 let g:crystalline_statusline_fn = 'StatusLine'
 let g:crystalline_tabline_fn = 'TabLine'
 let g:crystalline_theme = 'default'
+
+" LiteCorrect
+augroup litecorrect
+	autocmd!
+	autocmd FileType markdown,mkd,tex,plaintex packadd litecorrect|call litecorrect#init()|set spell
+augroup END
