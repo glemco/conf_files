@@ -10,15 +10,12 @@
 [submodule "vim/pack/all/start/ale"]
 	path = vim/pack/all/start/ale
 	url = git@github.com:dense-analysis/ale.git
-[submodule "vim/pack/all/opt/vim-crystalline"]
+[submodule "vim/pack/all/start/vim-crystalline"]
 	path = vim/pack/all/start/vim-crystalline
 	url = https://github.com/rbong/vim-crystalline
-[submodule "vim/pack/all/opt/vim-mundo"]
-	path = vim/pack/all/opt/vim-mundo
-	url = https://github.com/simnalamburt/vim-mundo.git
 [submodule "vim/pack/all/opt/litecorrect"]
 	path = vim/pack/all/opt/litecorrect
 	url = https://github.com/reedes/vim-litecorrect
-[submodule "vim/pack/all/start/sleuth"]
-	path = vim/pack/all/start/sleuth
-	url = https://github.com/tpope/vim-sleuth
+[submodule "vim/pack/all/start/mundo"]
+	path = vim/pack/all/start/mundo
+	url = https://github.com/simnalamburt/vim-mundo.git

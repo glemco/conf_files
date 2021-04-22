@@ -1,0 +1,33 @@
+######################################################################
+# @author      : {{NAME}} ({{EMAIL}})
+# @file        : {{FILE}}
+# @created     : {{TIMESTAMP}}
+######################################################################
+
+#IDIR =./include
+CC=gcc
+CFLAGS=-Wall #-I$(IDIR)
+
+ODIR=build
+EXEC=main{{CURSOR}}
+
+LIBS=
+
+SRC = main.c
+OBJ = $(patsubst %,$(ODIR)/%,$(SRC:.c=.o))
+
+all: $(ODIR) $(EXEC)
+
+$(ODIR):
+	mkdir -p $(ODIR)
+
+$(ODIR)/%.o: %.c
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+$(EXEC): $(OBJ)
+	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
+
+.PHONY: all clean
+
+clean:
+	rm -f $(ODIR)/*.o $(EXEC)

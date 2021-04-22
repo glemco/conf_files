@@ -26,7 +26,7 @@ case "$1" in
 		fi
 		url=$2
 		if [ $# -lt 3 ]; then
-			module=$(grep -oE '[^/]*$' <<< $url)
+			module=$(grep -oE '[^/]*$' <<< $url  | sed 's/vim-\|.git$//g')
 		else
 			module="$3"
 		fi
