@@ -1,0 +1,14 @@
+[user]
+	name = Gabriele Monaco
+	email = glemco@posteo.net
+[diff]
+	tool="vimdiff"
+	colorMoved = default
+[merge]
+	tool="vimdiff"
+[color]
+	ui = auto
+[pull]
+	rebase = true
+[init]
+	defaultBranch = master

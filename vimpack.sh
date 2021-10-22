@@ -1,4 +1,4 @@
-#! /usr/bin/sh
+#! /usr/bin/bash
 
 function usage {
 	echo "Usage `basename $0` [-o] install|remove|update|list|local-install|load|unload [arguments]"
