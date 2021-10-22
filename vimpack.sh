@@ -44,6 +44,8 @@ case "$1" in
 			exit 3
 		fi
 		git rm -f ${PACKDIR}"$module"
+		rm -rf .git/modules/${PACKDIR}"$module"
+		sed -i "\~${PACKDIR}$module~,+1d" .git/config
 		vim -c"helptags ALL" -c"q"
 		;;
 	update)

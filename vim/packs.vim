@@ -5,10 +5,12 @@ let g:tmpl_author_email = system("git config user.email | tr -d '\n'")
 
 " FZF
 noremap <Leader>t  :FZF<CR>
+noremap <Leader>g  :GitFiles<CR>
 let g:fzf_layout = { 'down': '40%' }
 
 " Ale
 let g:ale_c_parse_makefile = 1
+let g:ale_linters = {'perl': ['perl']}
 
 " Crystalline
 function! StatusLine(current, width)
@@ -21,7 +23,7 @@ function! StatusLine(current, width)
   endif
   let l:s .= ' %f%h%w%m%r '
   if a:current
-    let l:s .= crystalline#right_sep('', 'Fill') " . ' %{fugitive#head()}'
+    let l:s .= crystalline#right_sep('', 'Fill')
   endif
 
   let l:s .= '%='
@@ -29,7 +31,7 @@ function! StatusLine(current, width)
     let l:s .= crystalline#left_sep('', 'Fill') . ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}'
     let l:s .= crystalline#left_mode_sep('')
   endif
-  if a:width > 80
+  if a:width > 60
     let l:s .= ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
   else
     let l:s .= ' '
@@ -112,10 +114,11 @@ endfunction
 
 let g:crystalline_statusline_fn = 'StatusLine'
 let g:crystalline_tabline_fn = 'TabLine'
-let g:crystalline_theme = 'default'
+let g:crystalline_theme = 'badwolf'
 
 " LiteCorrect
+" also set spell and dictionary completion to test types
 augroup litecorrect
 	autocmd!
-	autocmd FileType markdown,mkd,tex,plaintex packadd litecorrect|call litecorrect#init()|set spell
+	autocmd FileType markdown,mkd,tex,plaintex,text packadd litecorrect|call litecorrect#init()| set spell|set complete+=k|set thesaurus=~/.vim/thesaurus/english.txt
 augroup END

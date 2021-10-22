@@ -154,11 +154,15 @@ set directory=~/.vim/tmp/swp//,.
 set listchars+=tab:..\|,trail:#,extends:>,precedes:<,space:·
 
 " Personal tab indentation
-set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+set tabstop=4 softtabstop=4 shiftwidth=4 "expandtab
 
 " Command completion
 set wildmode=longest,full
 set wildmenu
+
+" Insert mode completion up to longest common match
+"FIXME quite weird, try to find something better
+"set completeopt+=longest
 
 " Better vertical split
 set splitright
@@ -182,12 +186,19 @@ endif
 set laststatus=2
 "set showtabline=2
 
+" Nice automatic folds, leaving the manual ones available
+augroup vimrc
+  au BufReadPre * setlocal foldmethod=indent | setlocal foldlevel=99
+  au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
+augroup END
+
 " Shortcuts
 nnoremap <F9>  :set spell! spell?<CR>
 nnoremap <F8>  :set list! list?<CR>
-nnoremap <F7>  :set rnu! rnu?<CR>
+nnoremap <F7>  :copen<CR>
 nnoremap <F6>  :set nu! nu?<CR>
-nnoremap <F5>  :syntax sync fromstart<CR>
+"nnoremap <F5>  :syntax sync fromstart<CR>
+nnoremap <F5>  :make<CR><CR>
 nnoremap <F4>  :noh<CR>
 nnoremap <F3>  :Lex<CR>
 
