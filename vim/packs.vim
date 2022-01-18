@@ -11,6 +11,13 @@ let g:fzf_layout = { 'down': '40%' }
 " Ale
 let g:ale_c_parse_makefile = 1
 let g:ale_linters = {'perl': ['perl']}
+let g:ale_c_ccls_init_options = {
+\   'cache': {
+\       'directory': '/tmp/ccls/cache'
+\   }
+\ }
+"let g:ale_c_ccls_executable = 'ccls -v 2'
+let g:ale_c_cc_executable = '/tools/Xilinx/SDK/2019.1/gnu/aarch64/lin/aarch64-linux/bin/aarch64-linux-gnu-gcc'
 
 " Crystalline
 function! StatusLine(current, width)
@@ -120,5 +127,67 @@ let g:crystalline_theme = 'badwolf'
 " also set spell and dictionary completion to test types
 augroup litecorrect
 	autocmd!
-	autocmd FileType markdown,mkd,tex,plaintex,text packadd litecorrect|call litecorrect#init()| set spell|set complete+=k|set thesaurus=~/.vim/thesaurus/english.txt
+    function TextStuff()
+        packadd litecorrect
+        call litecorrect#init()
+        setlocal spell
+        setlocal complete+=k
+        setlocal thesaurus=~/.vim/thesaurus/english.txt
+    endfunction
+	autocmd FileType markdown,mkd,tex,plaintex,text call TextStuff()
+augroup END
+
+" Cscope (that could be a plugin itself..)
+if has("cscope")
+    " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
+    set cscopetag
+    set cscopetagorder=1
+    " add all to the quickfix list
+	set cscopequickfix=s-,c-,d-,i-,t-,e-,a- "g- don't put it or it will break tags
+    " add any cscope database in current directory
+    "if filereadable("cscope.out")
+    "    cs add cscope.out "already there?
+    "" else add the database pointed to by environment variable
+    "elseif $CSCOPE_DB != ""
+    "    cs add $CSCOPE_DB
+    "endif
+
+    "nnoremap <leader>fa :call CscopeFindInteractive(expand('<cword>'))<CR>
+    "nnoremap <leader>l :call QuickFixToggle()<CR>
+    " s: Find this C symbol
+    nnoremap  <leader>fs :cs find s <C-R>=expand('<cword>')<CR><CR>
+    " g: Find this definition
+    nnoremap  <leader>fg :cs find g <C-R>=expand('<cword>')<CR><CR>
+    " d: Find functions called by this function
+    nnoremap  <leader>fd :cs find d <C-R>=expand('<cword>')<CR><CR>
+    " c: Find functions calling this function
+    nnoremap  <leader>fc :cs find c <C-R>=expand('<cword>')<CR><CR>
+    " t: Find this text string
+    nnoremap  <leader>ft :cs find t <C-R>=expand('<cword>')<CR><CR>
+    " e: Find this egrep pattern
+    nnoremap  <leader>fe :cs find e <C-R>=expand('<cword>')<CR><CR>
+    " f: Find this file
+    "nnoremap  <leader>ff :cs find f <C-R>=expand('<cfile>')<CR><CR>
+    nnoremap  <leader>ff :cs find f <C-R>=expand('<cword>')<CR><CR>
+    " i: Find files #including this file
+    "nnoremap  <leader>fi :cs find i ^<C-R>=expand('<cfile>')<CR>$<CR>
+    nnoremap  <leader>fi :cs find i <C-R>=expand('<cword>')<CR><CR>
+endif
+
+"" index from kernel (TODO just load on C files)
+"set nocscopeverbose
+"set tags+=/mnt/nfs_ultrascale/linux-xlnx/tags
+"cs add /mnt/nfs_ultrascale/linux-xlnx/cscope.out /mnt/nfs_ultrascale/linux-xlnx/
+"set cscopeverbose
+augroup cdevel
+	autocmd!
+    function CDevel()
+        setlocal nocscopeverbose
+        setlocal tags+=/mnt/nfs_ultrascale/linux-xlnx/tags
+        cs add /mnt/nfs_ultrascale/linux-xlnx/cscope.out /mnt/nfs_ultrascale/linux-xlnx/
+        setlocal cscopeverbose
+        setlocal colorcolumn=81
+        highlight ColorColumn ctermbg=Black ctermfg=DarkRed
+    endfunction
+	autocmd FileType c,cpp call CDevel()
 augroup END

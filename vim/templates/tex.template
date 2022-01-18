@@ -9,6 +9,7 @@
 \documentclass[12pt]{article}
 
 \usepackage[pdfusetitle]{hyperref} % pdf automatic metadata
+\usepackage[T1]{fontenc}
 \usepackage[margin=2cm]{geometry}
 
 \begin{document}
