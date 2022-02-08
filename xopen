@@ -1,4 +1,2 @@
 #! /usr/bin/sh
-for f in $@; do
-	xdg-open $f
-done
+echo $@ | xargs -n 1 xdg-open
