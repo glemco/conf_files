@@ -1,0 +1,31 @@
+######################################################################
+# @author      : {{NAME}} ({{EMAIL}})
+# @file        : {{FILE}}
+# @created     : {{TIMESTAMP}}
+######################################################################
+
+CC=$(CROSS_COMPILE)gcc
+
+KVERSION=$(shell uname -r)
+BLDDIR=/lib/modules/$(KVERSION)/build
+
+NAME={{CURSOR}}
+MODNAME=$(NAME)
+
+obj-m = $(MODNAME).o
+#$(MODNAME)-y = $(NAME).o
+
+.PHONY: all clean load unload
+
+all:
+	$(MAKE) -C $(BLDDIR) M=$(shell pwd) modules
+
+clean:
+	$(MAKE) -C $(BLDDIR) M=$(shell pwd) clean
+	rm -rf Module.symvers modules.order
+
+load:
+	sudo insmod $(MODNAME).ko
+
+unload:
+	-sudo rmmod $(MODNAME)
