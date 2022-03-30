@@ -1,6 +1,7 @@
 bashrc: ~/.bashrc
 inputrc: ~/.inputrc
 pylintrc: ~/.pylintrc
+latexmkrc: ~/.latexmkrc
 vimrc: ~/.vimrc
 vim: ~/.vim/
 gitconfig: ~/.gitconfig

@@ -22,3 +22,6 @@
 [submodule "vim/pack/all/start/fugitive"]
 	path = vim/pack/all/start/fugitive
 	url = https://github.com/tpope/vim-fugitive
+[submodule "vim/pack/all/start/gutentags"]
+	path = vim/pack/all/start/gutentags
+	url = https://github.com/ludovicchabant/vim-gutentags

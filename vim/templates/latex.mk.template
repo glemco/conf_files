@@ -1,0 +1,66 @@
+######################################################################
+# @author      : {{NAME}} ({{EMAIL}})
+# @file        : {{FILE}}
+# @created     : {{TIMESTAMP}}
+######################################################################
+
+SOURCE={{CURSOR}}
+OTHERS=$(filter-out $(SOURCE).tex, $(wildcard *.tex))
+LATEX=pdflatex -interaction=batchmode -file-line-error
+DOCNAME=$(SOURCE)
+BIB=references.bib
+PICS=$(wildcard pictures/*)
+SPELLCHECK=languagetool
+
+USE_LATEXMK=$(shell command -v latexmk 2>&1)
+
+all: $(DOCNAME).pdf
+
+$(DOCNAME).pdf: $(SOURCE).tex $(OTHERS) $(BIB) $(PICS)
+ifneq ($(USE_LATEXMK),)
+	latexmk -pdf -pdflatex="$(LATEX)" -use-make $< || $(MAKE) fail
+else
+	$(LATEX) -draftmode $< #> /dev/null
+	bibtex $(SOURCE)
+	makeglossaries $(SOURCE)
+	$(LATEX) -draftmode $< #> /dev/null
+	$(LATEX) $< #> /dev/null
+endif
+	#mv $(SOURCE).pdf $(DOCNAME).pdf
+
+#may be needed to automate some steps
+%.aux: %.tex
+	$(LATEX) -draftmode $*
+
+$(SOURCE).bbl: $(SOURCE).tex $(OTHERS) $(BIB) $(SOURCE).aux
+	bibtex $(SOURCE)
+
+$(SOURCE).gls: $(SOURCE).tex $(OTHERS) $(SOURCE).aux
+	makeglossaries $(SOURCE)
+
+.PHONY: clean fail warn live
+
+clean:
+ifneq ($(USE_LATEXMK),)
+	latexmk -C
+	rm -f *.bbl *.glg *.glo *.gls *.glsdefs *.ist *.lol *.run.xml
+	rm -f $(SOURCE)
+else
+	rm -f *.aux *.bbl *.blg *.fdb_latexmk *.fls *.glg *.glo *.gls *.glsdefs *.ist *.lof *.log *.lol *.lot *.run.xml *.out *.toc
+endif
+	rm -f $(DOCNAME).pdf
+
+#display errors from the log file
+fail:
+	@grep -E ".+\..+:[0-9]+:.+" $(SOURCE).log
+	false
+
+warn:
+	#@grep -E undef $(SOURCE).log
+	@grep -i warn $(SOURCE).log
+
+spellcheck: $(SOURCE).tex
+	detex -e -- $^ | $(SPELLCHECK) $(DOCNAME).txt | tee spellcheck
+
+live:
+   latexmk -pvc $(SOURCE)

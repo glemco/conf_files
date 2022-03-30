@@ -1,0 +1,25 @@
+/**
+ * @author      : {{NAME}} ({{EMAIL}})
+ * @file        : {{FILE}}
+ * @created     : {{TIMESTAMP}}
+ */
+
+#define pr_fmt(fmt) "%s:%s: " fmt, KBUILD_MODNAME, __func__
+
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/init.h>
+
+static int __init {{FILE}}_init(void) {
+    return 0;
+}
+
+static void __exit {{FILE}}_exit(void) {
+}
+
+module_init({{FILE}}_init);
+module_exit({{FILE}}_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("{{NAME}}");
+MODULE_DESCRIPTION("Template for a Linux kernel module");
