@@ -48,7 +48,7 @@ case "$1" in
 		sed -i "\~${PACKDIR}$module~,+1d" .git/config
 		vim -c"helptags ALL" -c"q"
 		;;
-	update)
+	update|up)
 		if [ $# -ge 2 ]; then
 			pack=${PACKDIR}"$2"
 		fi
