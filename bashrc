@@ -57,7 +57,8 @@ fi
 #go back to find the root of the project (or home or system root)
 _find_root() {
 	dir=$PWD
-	while ! [ -d $dir/.git -o "`realpath -L $dir`" == "$HOME" -o \
+	while ! [ -d $dir/.git -o -d $dir/.svn -o \
+        "`realpath -L $dir`" == "$HOME" -o \
 		"`realpath -L $dir`" == "/" ]; do
 		dir+=/..
 	done

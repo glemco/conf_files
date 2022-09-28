@@ -177,6 +177,9 @@ set nomodeline
 " Better consistency for yank
 map Y y$
 
+" Keep edited files as hidden buffers (can change without saving)
+set hidden
+
 " Smarter diff recognition
 if has('nvim-0.3.2') || has("patch-8.1.0360")
   set diffopt=filler,internal,algorithm:histogram,indent-heuristic
@@ -235,6 +238,9 @@ nnoremap <F3>  :Lex<CR>
 nnoremap <Leader>]  :call system('ctags -R')<CR>
 nnoremap <Leader>[  :call system('cscope -Rbkq')<CR>
 vnoremap <Leader>c  "cy :call system('xclip -sel clip', @c)<CR>
+cabbrev w!! w !sudo tee > /dev/null %
+
+command RestoreSession execute "source Session.vim | silent exec \"!rm -f Session.vim\""
 
 if filereadable('/home/'.$USER.'/.vim/packs.vim')
 	source /home/$USER/.vim/packs.vim

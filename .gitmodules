@@ -25,3 +25,6 @@
 [submodule "vim/pack/all/start/gutentags"]
 	path = vim/pack/all/start/gutentags
 	url = https://github.com/ludovicchabant/vim-gutentags
+[submodule "vim/pack/all/start/csv.vim"]
+	path = vim/pack/all/start/csv.vim
+	url = https://github.com/chrisbra/csv.vim
