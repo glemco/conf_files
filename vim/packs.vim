@@ -17,7 +17,7 @@ let g:ale_c_ccls_init_options = {
 \   }
 \ }
 "let g:ale_c_ccls_executable = 'ccls -v 2'
-let g:ale_c_cc_executable = '/tools/Xilinx/SDK/2019.1/gnu/aarch64/lin/aarch64-linux/bin/aarch64-linux-gnu-gcc'
+"let g:ale_c_cc_executable = '/tools/Xilinx/SDK/2019.1/gnu/aarch64/lin/aarch64-linux/bin/aarch64-linux-gnu-gcc'
 
 " Crystalline
 function! StatusLine(current, width)
@@ -174,20 +174,20 @@ if has("cscope")
     nnoremap  <leader>fi :cs find i <C-R>=expand('<cword>')<CR><CR>
 endif
 
-"" index from kernel (TODO just load on C files)
-"set nocscopeverbose
-"set tags+=/mnt/nfs_ultrascale/linux-xlnx/tags
-"cs add /mnt/nfs_ultrascale/linux-xlnx/cscope.out /mnt/nfs_ultrascale/linux-xlnx/
-"set cscopeverbose
+" index from kernel
 augroup cdevel
 	autocmd!
     function CDevel()
         setlocal nocscopeverbose
-        setlocal tags+=/mnt/nfs_ultrascale/linux-xlnx/tags
-        cs add /mnt/nfs_ultrascale/linux-xlnx/cscope.out /mnt/nfs_ultrascale/linux-xlnx/
+        setlocal tags+=/opt/linux/tags
+        cs add /opt/linux/cscope.out /opt/linux/
         setlocal cscopeverbose
         setlocal colorcolumn=81
         highlight ColorColumn ctermbg=None ctermfg=DarkRed
     endfunction
 	autocmd FileType c,cpp call CDevel()
 augroup END
+
+" vimtex and SVED
+let g:vimtex_include_search_enabled = 0 "remove this to for gf and ctrl_P
+nmap <leader>lv :call SVED_Sync()<CR>

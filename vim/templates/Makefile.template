@@ -18,11 +18,13 @@ OBJ = $(patsubst %,$(ODIR)/%,$(SRC:.c=.o))
 
 all: $(ODIR) $(EXEC)
 
+-include $(ODIR)/*.d
+
 $(ODIR):
 	mkdir -p $(ODIR)
 
 $(ODIR)/%.o: %.c
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -MMD -o $@ $< $(CFLAGS)
 
 $(EXEC): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
