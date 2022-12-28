@@ -1,7 +1,7 @@
 " Templates engine
 let g:tmpl_search_paths = ['~/.vim/templates']
-let g:tmpl_author_name = system("git config user.name | tr -d '\n'")
-let g:tmpl_author_email = system("git config user.email | tr -d '\n'")
+let g:tmpl_author_name = $GIT_USER_NAME
+let g:tmpl_author_email = $GIT_USER_EMAIL
 
 " FZF
 noremap <Leader>t  :FZF<CR>
