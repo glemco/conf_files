@@ -69,8 +69,8 @@ Type (${PURPLE}q$RST) to exit. "
 	esac
 done
 
-git_user_name=$(git config user.name | tr -d '\n')
-git_user_email=$(git config user.email | tr -d '\n')
+git_user_name=$(git config --global user.name | tr -d '\n')
+git_user_email=$(git config --global user.email | tr -d '\n')
 if [ "$GIT_USER_NAME" != "$git_user_name" -o \
     "$GIT_USER_EMAIL" != "$git_user_email" ]; then
     echo "Updating username and email environment variables from gitconfig"
