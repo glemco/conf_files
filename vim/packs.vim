@@ -191,3 +191,9 @@ augroup END
 " vimtex and SVED
 let g:vimtex_include_search_enabled = 0 "remove this to for gf and ctrl_P
 nmap <leader>lv :call SVED_Sync()<CR>
+
+" markdown preview
+let g:mkdp_preview_options = {
+    \ 'disable_filename': 1,
+    \ }
+let g:mkdp_markdown_css = $HOME.'/.vim/markdown.css'
