@@ -68,16 +68,17 @@ _find_root() {
     fi
 }
 export -f _find_root
-_exclude_self() {
+_fd_find_root() {
     dir=$(_find_root)
     if [ "$dir" != "" ]; then
-        printf "%s" "-E $(realpath --relative-to=$dir .)"
+        printf "%s %s" "--search-path $dir" "--exclude $(realpath --relative-to=$dir .)"
     fi
 }
+export -f _fd_find_root
 
 export FD_DEFAULT_COMMAND='fd --follow'
 if type fd &> /dev/null; then
-    export FZF_DEFAULT_COMMAND='$FD_DEFAULT_COMMAND --search-path . --search-path $(_find_root) $(_exclude_self)'
+    export FZF_DEFAULT_COMMAND='$FD_DEFAULT_COMMAND --search-path . $(_fd_find_root)'
     #export FZF_DEFAULT_COMMAND='$FD_DEFAULT_COMMAND . $(_find_root) .'
     export FIND_DEFAULT_COMMAND=$FD_DEFAULT_COMMAND
 else
