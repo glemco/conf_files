@@ -248,3 +248,7 @@ command RestoreSession execute "source Session.vim | silent exec \"!rm -f Sessio
 if filereadable('/home/'.$USER.'/.vim/packs.vim')
 	source /home/$USER/.vim/packs.vim
 endif
+
+if filereadable($FZFPATH.'/fzf.vim')
+	source $FZFPATH/fzf.vim
+endif

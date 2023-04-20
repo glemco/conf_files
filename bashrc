@@ -53,6 +53,7 @@ fi
 if [ -f $FZFPATH/completion.bash ] ; then
     . $FZFPATH/completion.bash
 fi
+export FZFPATH
 #go back to find the root of the project (or home or system root)
 _find_root() {
     dir=$PWD
