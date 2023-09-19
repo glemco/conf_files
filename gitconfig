@@ -16,3 +16,5 @@
 	autoStash = true
 [svn]
 	rmdir = true
+[alias]
+	update = !git fetch upstream && git rebase --committer-date-is-author-date upstream/HEAD
