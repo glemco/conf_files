@@ -34,3 +34,9 @@
 [submodule "vim/pack/all/start/sved"]
 	path = vim/pack/all/start/sved
 	url = git@github.com:peterbjorgensen/sved.git
+[submodule "vim/pack/all/opt/diffchar.vim"]
+	path = vim/pack/all/opt/diffchar.vim
+	url = https://github.com/rickhowe/diffchar.vim
+[submodule "vim/pack/all/start/grayout.vim"]
+	path = vim/pack/all/start/grayout.vim
+	url = https://github.com/mphe/grayout.vim

@@ -18,7 +18,16 @@ let g:ale_c_ccls_init_options = {
 \   }
 \ }
 "let g:ale_c_ccls_executable = 'ccls -v 2'
-"let g:ale_c_cc_executable = '/tools/Xilinx/SDK/2019.1/gnu/aarch64/lin/aarch64-linux/bin/aarch64-linux-gnu-gcc'
+let g:ale_c_cc_executable = 'arm-none-eabi-gcc'
+let g:ale_fixers = {
+\   'c': [
+\       'clang-format',
+\   ],
+\   'cpp': [
+\       'clang-format',
+\   ]
+\ }
+
 
 " Crystalline
 function! StatusLine(current, width)
@@ -135,7 +144,7 @@ augroup litecorrect
         setlocal complete+=k
         setlocal thesaurus=~/.vim/thesaurus/english.txt
     endfunction
-	autocmd FileType markdown,mkd,tex,plaintex,text call TextStuff()
+	autocmd FileType markdown,mkd,tex,plaintex,text,gitcommit call TextStuff()
 augroup END
 
 " Cscope (that could be a plugin itself..)
@@ -175,6 +184,9 @@ if has("cscope")
     nnoremap  <leader>fi :cs find i <C-R>=expand('<cword>')<CR><CR>
 endif
 
+" GutenTags
+let g:gutentags_ctags_extra_args = ["--exclude=devices/wireless_4000/Second_Stage_Bootloader"]
+
 " index from kernel
 augroup cdevel
 	autocmd!
@@ -189,6 +201,8 @@ augroup cdevel
 	autocmd FileType c,cpp call CDevel()
 augroup END
 
+autocmd BufRead,BufNewFile Jenkinsfile set filetype=groovy
+
 " vimtex and SVED
 let g:vimtex_include_search_enabled = 0 "remove this to for gf and ctrl_P
 nmap <leader>lv :call SVED_Sync()<CR>
@@ -198,3 +212,11 @@ let g:mkdp_preview_options = {
     \ 'disable_filename': 1,
     \ }
 let g:mkdp_markdown_css = $HOME.'/.vim/markdown.css'
+
+" diffchar
+"let g:DiffUnit="Char"
+
+" Grayout
+let g:grayout_libclang_path = '/usr/lib/llvm-14/lib/'
+highlight PreprocessorGrayout cterm=italic ctermfg=DarkGray gui=italic guifg=#6c6c6c
+nmap <leader>g :GrayoutUpdate<CR>
