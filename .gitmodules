@@ -40,3 +40,6 @@
 [submodule "vim/pack/all/start/grayout.vim"]
 	path = vim/pack/all/start/grayout.vim
 	url = https://github.com/mphe/grayout.vim
+[submodule "vim/pack/all/opt/lsp"]
+	path = vim/pack/all/opt/lsp
+	url = https://github.com/yegappan/lsp
