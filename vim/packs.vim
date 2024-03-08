@@ -31,31 +31,38 @@ let g:ale_fixers = {
 
 
 " Crystalline
-function! StatusLine(current, width)
-  let l:s = ''
+let g:crystalline_separators = [
+      \ { 'ch': '', 'alt_ch': '', 'dir': '>' },
+      \ { 'ch': '', 'alt_ch': '', 'dir': '<' },
+      \ ]
 
-  if a:current
-    let l:s .= crystalline#mode() . crystalline#right_mode_sep('')
-  else
-    let l:s .= '%#CrystallineInactive#'
-  endif
-  let l:s .= ' %f%h%w%m%r '
-  if a:current
-    let l:s .= crystalline#right_sep('', 'Fill')
-  endif
+function! CrystallineStatuslineFn(winnr)
+    let l:s = ''
 
-  let l:s .= '%='
-  if a:current
-    let l:s .= crystalline#left_sep('', 'Fill') . ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}'
-    let l:s .= crystalline#left_mode_sep('')
-  endif
-  if a:width > 60
-    let l:s .= ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
-  else
-    let l:s .= ' '
-  endif
+    if a:winnr == winnr()
+        let l:s .= crystalline#ModeSection(0, 'A', 'B')
+    else
+        " TODO
+        let l:s .= crystalline#HiItem('InactiveFill')
+    endif
+    let l:s .= ' %f%h%w%m%r '
+    if a:winnr == winnr()
+        let l:s .= crystalline#Sep(0, 'B', 'Fill')
+    endif
 
-  return l:s
+    let l:s .= '%='
+    if a:winnr == winnr()
+        let l:s .= crystalline#Sep(1, 'Fill', 'B')
+        let l:s .= ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}'
+        let l:s .= crystalline#Sep(1, crystalline#ModeGroup('Fill'), crystalline#ModeGroup('A'))
+    endif
+    if winwidth(a:winnr) > 60
+        let l:s .= ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
+    else
+        let l:s .= ' '
+    endif
+
+    return l:s
 endfunction
 
 function! TabLine() " acclamation to avoid conflict
@@ -130,9 +137,12 @@ function! TabLine() " acclamation to avoid conflict
 	return l:s
 endfunction
 
-let g:crystalline_statusline_fn = 'StatusLine'
-let g:crystalline_tabline_fn = 'TabLine'
-let g:crystalline_theme = 'solarized'
+"TODO port the previous one
+function! g:CrystallineTablineFn()
+  return crystalline#DefaultTabline()
+endfunction
+
+let g:crystalline_theme = 'hybrid'
 
 " LiteCorrect
 " also set spell and dictionary completion to test types
