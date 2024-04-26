@@ -42,10 +42,10 @@ function! CrystallineStatuslineFn(winnr)
     if a:winnr == winnr()
         let l:s .= crystalline#ModeSection(0, 'A', 'B')
     else
-        " TODO
         let l:s .= crystalline#HiItem('InactiveFill')
     endif
-    let l:s .= ' %f%h%w%m%r '
+    " TODO dynamic based on number of splits?
+    let l:s .= ' %.' . winwidth(a:winnr)/2 . 'f%h%w%m%r '
     if a:winnr == winnr()
         let l:s .= crystalline#Sep(0, 'B', 'Fill')
     endif
@@ -53,7 +53,7 @@ function! CrystallineStatuslineFn(winnr)
     let l:s .= '%='
     if a:winnr == winnr()
         let l:s .= crystalline#Sep(1, 'Fill', 'B')
-        let l:s .= ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}'
+        let l:s .= ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}%{gutentags#statusline(""," ")}'
         let l:s .= crystalline#Sep(1, crystalline#ModeGroup('Fill'), crystalline#ModeGroup('A'))
     endif
     if winwidth(a:winnr) > 60
@@ -142,7 +142,7 @@ function! g:CrystallineTablineFn()
   return crystalline#DefaultTabline()
 endfunction
 
-let g:crystalline_theme = 'hybrid'
+let g:crystalline_theme = 'custom'
 
 " LiteCorrect
 " also set spell and dictionary completion to test types
@@ -197,6 +197,8 @@ endif
 
 " GutenTags
 let g:gutentags_ctags_extra_args = ["--exclude=devices/wireless_4000/Second_Stage_Bootloader"]
+let g:gutentags_cscope_build_inverted_index = 1
+let g:gutentags_modules = ["ctags", "gtags_cscope"]
 
 " index from kernel
 augroup cdevel
@@ -213,6 +215,8 @@ augroup cdevel
 augroup END
 
 autocmd BufRead,BufNewFile Jenkinsfile set filetype=groovy
+" proemion configurator
+autocmd BufRead,BufNewFile *.cfg set filetype=xml
 
 " vimtex and SVED
 let g:vimtex_include_search_enabled = 0 "remove this to for gf and ctrl_P
