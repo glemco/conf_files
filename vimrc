@@ -220,6 +220,9 @@ function! RunCurr()
         execute("!go run " . bufname("%"))
     elseif (&filetype == "cucumber")
         call Run_Cucumber_Test(bufname("%"))
+    elseif (&filetype == "groovy")
+        "cannot execute this, restore the syntax sync behaviour
+        syntax sync fromstart
     else
         "perl reads the shebang, no need to execute
         execute("!perl " . bufname("%"))
@@ -260,13 +263,20 @@ endif
 function Run_Cucumber_Test(file)
   "Run Cucumber Test
   let file=trim(system("realpath ".a:file))
-  execute "!. tasks.sh &>/dev/null && Run_Cucumber_Test" l:file
-  "let fileBasename=trim(system("basename ".a:file))
-  "let workspaceFolder=getcwd()
-  "execute "!docker" "run" "-it" "--rm" "-v" l:file.":/opt/proemion/canlink-test-suite/features/user/".l:fileBasename "-v" l:workspaceFolder."/cucumber-tests/features/testData:/opt/proemion/canlink-test-suite/features/testData" "-v" l:workspaceFolder."/cucumber-tests/cucumberConfig.js:/opt/proemion/canlink-test-suite/cucumberConfig.js" "-v" l:workspaceFolder."/cucumber-tests/reports:/opt/proemion/canlink-test-suite/reports" "-e NODE_ID_CAN1" "-e NODE_ID_CAN2" "-e PSP_USERNAME" "-e PSP_PASSWORD" "-e SERVER_ADDRESS" "-e DEVICE_TYPE" "-e READY_CHECK" "docker.proemion.com/canlink-test-suite:current" "bash" "bin/analysis.sh" "-r" "1" "features/user/".l:fileBasename
+  execute "!. tasks.sh &>/dev/null && interactive=-it Run_Cucumber_Test" l:file "; res=$? ; notify-send -e $(basename" l:file ") $([ $res -eq 0 ] || echo failed)"
 endfunction
 command -nargs=1 RunCucumberTest call Run_Cucumber_Test(expand(<q-args>))
 function Open_Cucumber_Report()
   execute "!. tasks.sh &>/dev/null && Open_Cucumber_Report"
 endfunction
 command OpenCucumberReport call Open_Cucumber_Report()
+function Format_All()
+    execute "!cd $(git rev-parse --show-toplevel) && . tasks.sh && Run_C_Code_Formatter -i"
+endfunction
+command FormatAll call Format_All()
+
+" binary read
+nmap <Leader>br :%!xxd<CR> :set filetype=xxd<CR>
+
+" binary write
+nmap <Leader>bw :%!xxd -r<CR> :set binary<CR> :set filetype=<CR>
