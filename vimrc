@@ -191,10 +191,11 @@ set laststatus=2
 
 " Nice automatic folds, leaving the manual ones available
 " (somewhat weird sometimes)
-"augroup vimrc
-"  au BufReadPre * setlocal foldmethod=indent | setlocal foldlevel=99
-"  au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
-"augroup END
+augroup vimrc
+    let g:xml_syntax_folding=1
+    au BufReadPre * setlocal foldmethod=syntax | setlocal foldlevel=99
+    au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
+augroup END
 
 " Highlight trailing spaces
 " http://vim.wikia.com/wiki/Highlight_unwanted_spaces
@@ -280,3 +281,16 @@ nmap <Leader>br :%!xxd<CR> :set filetype=xxd<CR>
 
 " binary write
 nmap <Leader>bw :%!xxd -r<CR> :set binary<CR> :set filetype=<CR>
+
+" restore vim90 highlight patterns
+function! FixTheme()
+    if &background ==# 'light'
+        hi Visual term=reverse ctermbg=7 ctermfg=NONE guibg=LightGrey guifg=NONE
+    else
+        hi Visual term=reverse ctermbg=242 ctermfg=NONE guibg=DarkGrey guifg=NONE
+    endif
+endfunction
+call FixTheme()
+
+" Open tags in vertical splits (cannot remap existing one?!)
+nnoremap <C-W><C-V>[ :vert winc ]<CR>
