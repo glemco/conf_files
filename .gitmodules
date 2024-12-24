@@ -43,3 +43,6 @@
 [submodule "vim/pack/all/opt/lsp"]
 	path = vim/pack/all/opt/lsp
 	url = https://github.com/yegappan/lsp
+[submodule "vim/pack/all/start/bpftrace.vim"]
+	path = vim/pack/all/start/bpftrace.vim
+	url = https://github.com/mmarchini/bpftrace.vim
