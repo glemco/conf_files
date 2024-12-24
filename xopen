@@ -1,2 +1,2 @@
 #! /usr/bin/sh
-echo $@ | xargs -n 1 xdg-open
+echo "$@" | xargs -n 1 xdg-open

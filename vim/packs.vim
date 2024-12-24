@@ -155,7 +155,7 @@ augroup litecorrect
         setlocal complete+=k
         setlocal thesaurus=~/.vim/thesaurus/english.txt
     endfunction
-	autocmd FileType markdown,mkd,tex,plaintex,text,gitcommit call TextStuff()
+	autocmd FileType markdown,mkd,tex,plaintex,text,gitcommit,gitsendemail call TextStuff()
 augroup END
 
 " Cscope (that could be a plugin itself..)
@@ -298,3 +298,6 @@ nnoremap  <leader>la :LspCodeAction<CR>
 nnoremap  <leader>ld :LspDocumentSymbol<CR>
 
 au BufNewFile,BufRead,BufEnter packadd lsp
+
+" EditorConfig (bundled)
+packadd editorconfig
