@@ -1,9 +1,6 @@
 [submodule "vim/pack/all/start/vim-templates"]
 	path = vim/pack/all/start/vim-templates
 	url = https://github.com/tibabit/vim-templates
-[submodule "vim/pack/all/start/markdown-preview"]
-	path = vim/pack/all/start/markdown-preview
-	url = https://github.com/iamcco/markdown-preview.nvim
 [submodule "vim/pack/all/start/vim-dirdiff"]
 	path = vim/pack/all/start/vim-dirdiff
 	url = https://github.com/will133/vim-dirdiff
@@ -46,3 +43,6 @@
 [submodule "vim/pack/all/start/bpftrace.vim"]
 	path = vim/pack/all/start/bpftrace.vim
 	url = https://github.com/mmarchini/bpftrace.vim
+[submodule "vim/pack/all/start/previm"]
+	path = vim/pack/all/start/previm
+	url = https://github.com/previm/previm.git
