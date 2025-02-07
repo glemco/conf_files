@@ -267,32 +267,12 @@ call LspAddServer([#{
             \    path: '/usr/bin/clangd',
             \    args: ['--background-index', '--query-driver=/opt/st/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc']
             \  }])
-call LspAddServer([#{
-            \    name: 'cucumber',
-            \    filetype: ['cucumber'],
-            \    debug: v:true,
-            \    path: s:cucumber_language_server,
-            \    args: ['--stdio'],
-            \    customRequestHandlers: {'workspace/semanticTokens/refresh': function('s:do_nothing') }
-            \  }])
-call LspAddServer([#{
-            \    name: 'Jenkinsfile',
-            \    filetype: ['groovy'],
-            \    path: '/usr/bin/java',
-            \    args: ['-jar', '/home/monaco/.local/share/groovy-language-server-all.jar']
-            \  }])
-call LspAddServer([#{
-            \    name: 'Javascript',
-            \    filetype: ['typescript', 'javascript'],
-            \    path: '/home/monaco/.local/bin/typescript-language-server',
-            \    args: ['--stdio']
-            \  }])
-call LspAddServer([#{
-            \    name: 'Bash',
-            \    filetype: ['sh', 'bash'],
-            \    path: '/home/monaco/.local/bin/bash-language-server',
-            \    args: ['start']
-            \  }])
+"call LspAddServer([#{
+"            \    name: 'Bash',
+"            \    filetype: ['sh', 'bash'],
+"            \    path: '/home/monaco/.local/bin/bash-language-server',
+"            \    args: ['start']
+"            \  }])
 nnoremap  <leader>lh :LspHover<CR>
 nnoremap  <leader>la :LspCodeAction<CR>
 nnoremap  <leader>ld :LspDocumentSymbol<CR>
