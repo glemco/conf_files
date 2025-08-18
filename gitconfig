@@ -18,6 +18,9 @@
 	rmdir = true
 [alias]
 	update = !git fetch upstream && git rebase --committer-date-is-author-date upstream/HEAD
+	backport = !sh git-backport
+	iterate = !sh git-iterate
+	deploy = !sh git-deploy
 [core]
 	excludesFile = ~/.gitignore
 [sendemail]
