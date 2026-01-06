@@ -32,3 +32,5 @@
 	signOff = true
 	useAutoBase = true
 	coverFromDescription = auto
+[init]
+	templateDir = ~/.gittemplate

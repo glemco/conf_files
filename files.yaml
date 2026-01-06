@@ -4,6 +4,7 @@ vimrc: ~/.vimrc
 vim: ~/.vim/
 gitconfig: ~/.gitconfig
 gitignore: ~/.gitignore
+gittemplate: ~/.gittemplate/
 xopen: ~/.local/bin/xopen
 unlock-all: ~/.local/bin/unlock-all
 to_cmd.sh: ~/.local/bin/to_cmd
