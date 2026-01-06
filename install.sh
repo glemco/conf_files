@@ -15,8 +15,17 @@ FCOL=$BOLD$CYAN
 IFS=$'\n'
 for line in $(cat files.yaml); do
 	IFS=': ' read -r -a arr <<< $line
-	file=${arr[0]}
-	location=${arr[1]}
+	if [[ $line =~ ^[[:space:]]*-[[:space:]] ]]; then
+		# assume file was stored previously
+		location="${line#*- }"
+	else
+		file=${arr[0]}
+		location=${arr[1]}
+	fi
+	# it's an array
+	if [ -z "$location" ]; then
+		continue
+	fi
 
 	#TODO improve behaviour for those two..
 	[ `grep -E "^~" <<< "$location"` ] && location="$HOME""$(tr -d '~' <<< $location)" || SUDO="sudo"
