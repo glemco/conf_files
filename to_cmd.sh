@@ -9,6 +9,7 @@
 ######################################################################
 
 patch=$1
+cover_letter=$(grep -z 0000 /proc/$PPID/cmdline | tr -d '\0')
 
 if [ -f to_file ]; then
     cat to_file
@@ -33,6 +34,11 @@ grep ^To: "$patch" | sed 's/To: //'
 # the cover letter is not a patch
 if echo "$patch" | grep -q 0000; then
     exit 0
+fi
+
+# parse from the cover letter
+if [ -n "$cover_letter" ]; then
+    grep ^To: "$cover_letter" | sed 's/To: //'
 fi
 
 # add only lists and maintainers by default
