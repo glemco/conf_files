@@ -13,5 +13,7 @@ cc_cmd.sh: ~/.local/bin/cc_cmd
 git-extras.sh:
   - ~/.local/bin/git-iterate
   - ~/.local/bin/git-deploy
+  - ~/.local/bin/git-grab-patch
+  - ~/.local/bin/git-prepare-pr
 persistent_access: /etc/sudoers.d/persistent_access
 init.vim: ~/.config/nvim/init.vim
