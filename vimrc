@@ -1,33 +1,33 @@
 if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
-   set fileencodings=ucs-bom,utf-8,latin1
+	set fileencodings=ucs-bom,utf-8,latin1
 endif
 
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
-  finish
+	finish
 endif
 
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 " Avoid side effects when it was already reset.
 if &compatible
-  set nocompatible
+	set nocompatible
 endif
 
 " When the +eval feature is missing, the set command above will be skipped.
 " Use a trick to reset compatible only when the +eval feature is missing.
 silent! while 0
-  set nocompatible
+	set nocompatible
 silent! endwhile
 
 " Allow backspacing over everything in insert mode.
 set backspace=indent,eol,start
 
 if has("vms")
-  set nobackup		" do not keep a backup file, use versions instead
+	set nobackup		" do not keep a backup file, use versions instead
 else
-  set backup		" keep a backup file (restore to previous version)
-  set undofile		" keep an undo file (undo changes after closing)
+	set backup		" keep a backup file (restore to previous version)
+	set undofile		" keep an undo file (undo changes after closing)
 endif
 set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
@@ -43,64 +43,64 @@ inoremap <C-U> <C-G>u<C-U>
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 if has('mouse')
-  set mouse=a
+	set mouse=a
 endif
 
 " Do incremental searching when it's possible to timeout.
 if has('reltime')
-  set incsearch
+	set incsearch
 endif
 
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
 
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
+	" Enable file type detection.
+	" Use the default filetype settings, so that mail gets 'tw' set to 72,
+	" 'cindent' is on in C files, etc.
+	" Also load indent files, to automatically do language-dependent indenting.
+	filetype plugin indent on
 
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
+	" Put these in an autocmd group, so that we can delete them easily.
+	augroup vimrcEx
+	au!
 
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
+	" For all text files set 'textwidth' to 78 characters.
+	autocmd FileType text setlocal textwidth=78
 
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-  \ if line("'\"") > 0 && line ("'\"") <= line("$") |
-  \   exe "normal! g'\"" |
-  \ endif
-  " don't write swapfile on most commonly used directories for NFS mounts or USB sticks
-  autocmd BufNewFile,BufReadPre /media/*,/run/media/*,/mnt/* set directory=~/tmp,/var/tmp,/tmp
-  " start with spec file template
-  " 1724126 - do not open new file with .spec suffix with spec file template
-  " apparently there are other file types with .spec suffix, so disable the
-  " template
-  " autocmd BufNewFile *.spec 0r /usr/share/vim/vimfiles/template.spec
-  augroup END
+	" When editing a file, always jump to the last known cursor position.
+	" Don't do it when the position is invalid or when inside an event handler
+	" (happens when dropping a file on gvim).
+	autocmd BufReadPost *
+	\ if line("'\"") > 0 && line ("'\"") <= line("$") |
+	\   exe "normal! g'\"" |
+	\ endif
+	" don't write swapfile on most commonly used directories for NFS mounts or USB sticks
+	autocmd BufNewFile,BufReadPre /media/*,/run/media/*,/mnt/* set directory=~/tmp,/var/tmp,/tmp
+	" start with spec file template
+	" 1724126 - do not open new file with .spec suffix with spec file template
+	" apparently there are other file types with .spec suffix, so disable the
+	" template
+	" autocmd BufNewFile *.spec 0r /usr/share/vim/vimfiles/template.spec
+	augroup END
 
 else
 
-  set autoindent		" always set autoindenting on
+	set autoindent		" always set autoindenting on
 
 endif " has("autocmd")
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
-  " Revert with ":syntax off".
-  syntax on
-  "syntax sync minlines=200 "to correct errors
+	" Revert with ":syntax off".
+	syntax on
+	"syntax sync minlines=200 "to correct errors
 
-  " I like highlighting strings inside C comments.
-  " Revert with ":unlet c_comment_strings".
-  let c_comment_strings=1
-  " Also switch on highlighting the last used search pattern.
-  set hlsearch
+	" I like highlighting strings inside C comments.
+	" Revert with ":unlet c_comment_strings".
+	let c_comment_strings=1
+	" Also switch on highlighting the last used search pattern.
+	set hlsearch
 endif
 
 
@@ -109,15 +109,15 @@ endif
 " Only define it when not defined already.
 " Revert with: ":delcommand DiffOrig".
 if !exists(":DiffOrig")
-  command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
-		  \ | wincmd p | diffthis
+	command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+				\ | wincmd p | diffthis
 endif
 
 if has('langmap') && exists('+langremap')
-  " Prevent that the langmap option applies to characters that result from a
-  " mapping.  If set (default), this may break plugins (but it's backward
-  " compatible).
-  set nolangremap
+	" Prevent that the langmap option applies to characters that result from a
+	" mapping.  If set (default), this may break plugins (but it's backward
+	" compatible).
+	set nolangremap
 endif
 
 " Don't wake up system with blinking cursor:
@@ -143,7 +143,7 @@ set directory=~/.vim/tmp/swp//,.
 set listchars+=tab:..\|,trail:#,extends:>,precedes:<,space:·
 
 " Personal tab indentation
-set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab
 
 " Command completion
 set wildmode=longest,full
@@ -182,27 +182,27 @@ autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
 function! RunCurr()
-    let $nproc = system("nproc") * 5/4
-    if findfile("Makefile") != ""
-        if (&filetype == "rst" || &filetype == "txt")
-            make! -j $nproc htmldocs
-        else
-            make! -j $nproc
-        endif
-    elseif (&filetype == "tex" || &filetype == "plaintex")
-        execute("!latexmk *.tex")
-    elseif (&filetype == "go")
-        execute("!go run " . bufname("%"))
-    elseif (&filetype == "xml")
-        " assume beaker job
-        execute("!bkr job-submit " . bufname("%"))
-    elseif (&filetype == "groovy")
-        "cannot execute this, restore the syntax sync behaviour
-        syntax sync fromstart
-    else
-        "perl reads the shebang, no need to execute
-        execute("!perl " . bufname("%"))
-    endif
+	let $nproc = system("nproc") * 5/4
+	if findfile("Makefile") != ""
+		if (&filetype == "rst" || &filetype == "txt")
+			make! -j $nproc htmldocs
+		else
+			make! -j $nproc
+		endif
+	elseif (&filetype == "tex" || &filetype == "plaintex")
+		execute("!latexmk *.tex")
+	elseif (&filetype == "go")
+		execute("!go run " . bufname("%"))
+	elseif (&filetype == "xml")
+		" assume beaker job
+		execute("!bkr job-submit " . bufname("%"))
+	elseif (&filetype == "groovy")
+		"cannot execute this, restore the syntax sync behaviour
+		syntax sync fromstart
+	else
+		"perl reads the shebang, no need to execute
+		execute("!perl " . bufname("%"))
+	endif
 endfunction
 
 "ignore files for vimgrep
@@ -246,11 +246,11 @@ nmap <Leader>bw :%!xxd -r<CR> :set binary<CR> :set filetype=<CR>
 
 " restore vim90 highlight patterns
 function! FixTheme(_)
-    if &background ==# 'light'
-        hi Visual term=reverse ctermbg=7 ctermfg=NONE guibg=LightGrey guifg=NONE
-    else
-        hi Visual term=reverse ctermbg=242 ctermfg=NONE guibg=DarkGrey guifg=NONE
-    endif
+	if &background ==# 'light'
+		hi Visual term=reverse ctermbg=7 ctermfg=NONE guibg=LightGrey guifg=NONE
+	else
+		hi Visual term=reverse ctermbg=242 ctermfg=NONE guibg=DarkGrey guifg=NONE
+	endif
 endfunction
 autocmd VimEnter * call timer_start(500, 'FixTheme')
 

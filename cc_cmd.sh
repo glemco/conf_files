@@ -10,16 +10,16 @@
 
 # optional feature
 if [ -n "$SKIP_COVER" ]; then
-    exit 0
+	exit 0
 fi
 
 cover_letter=$(grep -z 0000 /proc/$PPID/cmdline | tr -d '\0')
 
 if echo "$1" | grep -q 0000; then
-    exit 0
+	exit 0
 fi
 
 if [ -n "$cover_letter" ]; then
-    #grep ^To: "$cover_letter" | sed 's/To: //'
-    grep ^Cc: "$cover_letter" | sed 's/Cc: //'
+	#grep ^To: "$cover_letter" | sed 's/To: //'
+	grep ^Cc: "$cover_letter" | sed 's/Cc: //'
 fi

@@ -81,9 +81,9 @@ done
 git_user_name=$(git config --global user.name | tr -d '\n')
 git_user_email=$(git config --global user.email | tr -d '\n')
 if [ "$GIT_USER_NAME" != "$git_user_name" -o \
-    "$GIT_USER_EMAIL" != "$git_user_email" ]; then
-    echo "Updating username and email environment variables from gitconfig"
-    sed -i ~/.bashrc -f - << EOF
+	"$GIT_USER_EMAIL" != "$git_user_email" ]; then
+	echo "Updating username and email environment variables from gitconfig"
+	sed -i ~/.bashrc -f - << EOF
 s/GIT_USER_NAME=.*/GIT_USER_NAME="$git_user_name"/
 s/GIT_USER_EMAIL=.*/GIT_USER_EMAIL="$git_user_email"/
 EOF
