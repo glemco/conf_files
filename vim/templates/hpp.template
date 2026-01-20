@@ -8,11 +8,11 @@
 #define _{{MACRO_GUARD}}
 
 class {{CLASS}} {
-    public:
-        {{CLASS}} ({{CURSOR}});
-        virtual ~{{CLASS}} ();
-    private:
-        /* private data */
+	public:
+		{{CLASS}} ({{CURSOR}});
+		virtual ~{{CLASS}} ();
+	private:
+		/* private data */
 };
 
 #endif // _{{MACRO_GUARD}}
