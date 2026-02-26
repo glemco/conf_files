@@ -138,3 +138,7 @@ fi
 export MODULEPATH+=":$HOME/.modulefiles/"
 export GIT_USER_NAME="glemco"
 export GIT_USER_EMAIL="32201227+glemco@users.noreply.github.com"
+
+# configurable environment like API keys, not to commit
+# shellcheck disable=SC1090
+[ -f ~/.env ] && . ~/.env
