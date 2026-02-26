@@ -14,13 +14,12 @@
 	defaultBranch = main
 [rebase]
 	autoStash = true
+	missingCommitsCheck = error
+	autoSquash = true
 [svn]
 	rmdir = true
 [alias]
 	update = !git fetch upstream && git rebase --committer-date-is-author-date upstream/HEAD
-	backport = !sh git-backport
-	iterate = !sh git-iterate
-	deploy = !sh git-deploy
 [core]
 	excludesFile = ~/.gitignore
 [sendemail]
@@ -28,6 +27,8 @@
 	confirm = auto
 	toCmd = ~/.local/bin/to_cmd
 	ccCmd = ~/.local/bin/cc_cmd
+	aliasesFile = /home/gmonaco/.mailrc
+	aliasFileType = mailrc
 [format]
 	signOff = true
 	useAutoBase = true
