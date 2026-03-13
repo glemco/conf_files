@@ -38,8 +38,22 @@ if [ -f /usr/share/fzf/key-bindings.bash ] ||
 	. /usr/share/fzf/completion.bash 2> /dev/null | true
 fi #for archlinux (or general, never fail)
 
+#go back to find the root of the project (or home or system root)
+_find_root() {
+	dir=$PWD
+	while ! [ -d $dir/.git -o "`realpath -L $dir`" == "$HOME" -o \
+		"`realpath -L $dir`" == "/" ]; do
+		dir+=/..
+	done
+	if [ "$PWD" != "$dir" ]; then
+		realpath -L $dir --relative-to=$PWD
+	fi
+}
+export -f _find_root
+
 if type fd &> /dev/null; then
-    export FZF_DEFAULT_COMMAND='fd --follow'
+	export FZF_DEFAULT_COMMAND='fd --follow . $(_find_root) .'
+	#export FZF_DEFAULT_COMMAND='fd --follow'
 else
 	FZF_MAX_DEPTH=6
 	export FZF_DEFAULT_COMMAND="command find -L . -depth -mindepth 1 -maxdepth $FZF_MAX_DEPTH \
@@ -57,8 +71,8 @@ _fzf_compgen_dir() {
   $FZF_DEFAULT_COMMAND --type d . "$1"
 }
 
-alias xopen=xdg-open
-
 if type flatpak &> /dev/null; then
 	export PATH+=':/var/lib/flatpak/exports/bin/'
 fi
+
+export MODULEPATH+=":$HOME/.modulefiles/"
