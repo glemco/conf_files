@@ -224,13 +224,15 @@ function! RunCurr()
     endif
 endfunction
 
+"ignore files for vimgrep
+set wildignore+=cscope.*,tags,*.o,*.ko
+
 " Shortcuts
 nnoremap <F9>  :set spell! spell?<CR>
 nnoremap <F8>  :set list! list?<CR>
 nnoremap <F7>  :copen<CR>
 nnoremap <F6>  :set nu! nu?<CR>
 "nnoremap <F5>  :syntax sync fromstart<CR>
-nnoremap <F5>  :make!<CR><CR>
 nnoremap <F5>  :call RunCurr()<CR>
 nnoremap <F4>  :noh<CR>
 nnoremap <F3>  :Lex<CR>
@@ -238,6 +240,7 @@ nnoremap <F3>  :Lex<CR>
 nnoremap <Leader>]  :call system('ctags -R')<CR>
 nnoremap <Leader>[  :call system('cscope -Rbkq')<CR>
 vnoremap <Leader>c  "cy :call system('xclip -sel clip', @c)<CR>
+nnoremap <Leader>'  :buffers<CR>:buffer<Space>
 cabbrev w!! w !sudo tee > /dev/null %
 
 command RestoreSession execute "source Session.vim | silent exec \"!rm -f Session.vim\""

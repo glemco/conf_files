@@ -4,7 +4,7 @@
  * @created     : {{TIMESTAMP}}
  */
 
-#include "{{FILE}}.h"
+#include "{{FILE}}.hpp"
 
 {{CLASS}}::{{CLASS}}() {
     {{CURSOR}}

@@ -6,7 +6,7 @@
 
 SOURCE={{CURSOR}}
 OTHERS=$(filter-out $(SOURCE).tex, $(wildcard *.tex))
-LATEX=pdflatex -file-line-error
+LATEX=pdflatex -file-line-error -synctex=1
 DOCNAME=$(SOURCE)
 BIB=references.bib
 PICS=$(wildcard pictures/*)
