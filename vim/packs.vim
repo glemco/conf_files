@@ -9,6 +9,7 @@ noremap <Leader>g  :GitFiles<CR>
 let g:fzf_layout = { 'down': '40%' }
 
 " Ale
+let ale_virtualtext_cursor = 'disabled'
 let g:ale_c_parse_makefile = 1
 let g:ale_linters = {'perl': ['perl']}
 let g:ale_c_ccls_init_options = {
