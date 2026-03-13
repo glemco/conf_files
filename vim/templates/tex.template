@@ -6,11 +6,13 @@
 % @description : {{CURSOR}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[12pt]{article}
+\documentclass[12pt,a4paper]{article}
 
 \usepackage[pdfusetitle]{hyperref} % pdf automatic metadata
 \usepackage[T1]{fontenc}
 \usepackage[margin=2cm]{geometry}
+\usepackage[british]{babel}
+\usepackage{graphicx}
 
 \begin{document}
 
