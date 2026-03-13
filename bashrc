@@ -75,7 +75,7 @@ export -f _find_root
 _fd_find_root() {
     dir=$(_find_root)
     if [ "$dir" != "" ]; then
-        printf "%s %s" "--search-path $dir" "--exclude $(realpath --relative-to=$dir .)"
+        printf "%s %s" "--search-path $dir" "--exclude $(realpath --relative-to="$dir" .)"
     fi
 }
 export -f _fd_find_root
@@ -94,7 +94,7 @@ find_wrapper() {
 }
 export -f find_wrapper
 if type fd &> /dev/null; then
-    export FZF_DEFAULT_COMMAND='find_wrapper $(_fd_find_root)'
+    export FZF_DEFAULT_COMMAND="find_wrapper \$(_fd_find_root)"
     #export FZF_DEFAULT_COMMAND='$FD_DEFAULT_COMMAND --search-path . $(_fd_find_root)'
     #export FZF_DEFAULT_COMMAND='$FD_DEFAULT_COMMAND . $(_find_root) .'
     export FIND_DEFAULT_COMMAND=$FD_DEFAULT_COMMAND
@@ -135,6 +135,17 @@ if type flatpak &> /dev/null; then
 	export PATH+=':/var/lib/flatpak/exports/bin/'
 fi
 
-export MODULEPATH+=":$HOME/.modulefiles/"
 export GIT_USER_NAME="glemco"
 export GIT_USER_EMAIL="32201227+glemco@users.noreply.github.com"
+
+# configurable environment like API keys, not to commit
+# shellcheck disable=SC1090
+[ -f ~/.env ] && . ~/.env
+
+if  gpg --export-ssh-key gmonaco &> /dev/null; then
+	SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+	GPG_TTY=$(tty)
+	export SSH_AUTH_SOCK GPG_TTY
+	# agent is started on demand, ping it here
+	gpg-connect-agent /bye &> /dev/null
+fi

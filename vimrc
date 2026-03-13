@@ -108,9 +108,10 @@ endif
 " file it was loaded from, thus the changes you made.
 " Only define it when not defined already.
 " Revert with: ":delcommand DiffOrig".
+delcommand DiffOrig
 if !exists(":DiffOrig")
 	command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
-				\ | wincmd p | diffthis
+				\ | wincmd p | diffthis | exe 'wincmd p | set ft=' . &filetype | wincmd p
 endif
 
 if has('langmap') && exists('+langremap')
@@ -229,8 +230,8 @@ cabbrev w!! w !sudo tee > /dev/null %
 
 command RestoreSession execute "source Session.vim | silent exec \"!rm -f Session.vim\""
 
-if filereadable('/home/'.$USER.'/.vim/packs.vim')
-	source /home/$USER/.vim/packs.vim
+if filereadable($HOME.'/.vim/packs.vim')
+	source $HOME/.vim/packs.vim
 endif
 
 " defined in bashrc
@@ -253,6 +254,18 @@ function! FixTheme(_)
 	endif
 endfunction
 autocmd VimEnter * call timer_start(500, 'FixTheme')
+
+function! ToggleIgnoreWhitespace()
+	if !&diff
+		return
+	endif
+	if index(split(&diffopt, ','), 'iwhiteall') >= 0
+		set diffopt-=iwhiteall
+	else
+		set diffopt+=iwhiteall
+	endif
+endfunction
+nnoremap <leader>w :call ToggleIgnoreWhitespace()<CR>
 
 " Open tags in vertical splits (cannot remap existing one?!)
 nnoremap <C-W><C-V>[ :vert winc ]<CR>

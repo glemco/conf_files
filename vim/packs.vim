@@ -8,7 +8,8 @@ noremap <Leader>t  :FZF<CR>
 let g:fzf_layout = { 'down': '40%' }
 
 " Ale
-let ale_virtualtext_cursor = 'disabled'
+let g:ale_virtualtext_cursor = v:false
+let g:ale_hover_cursor = v:false
 let g:ale_linters = {
 			\   'c': ['clangd'],
 			\   'python': ['mypy', 'pylint', 'ruff', 'pylsp'],
@@ -44,10 +45,10 @@ function! CrystallineStatuslineFn(winnr)
 		let l:s .= ' %{&paste ?"PASTE ":""}%{&spell?"SPELL ":""}%{gutentags#statusline(""," ")}'
 		let l:s .= crystalline#Sep(1, crystalline#ModeGroup('Fill'), crystalline#ModeGroup('A'))
 	endif
-	if winwidth(a:winnr) > 60
+	if winwidth(a:winnr) > 45
 		let l:s .= ' %{&ft}[%{&fenc!=#""?&fenc:&enc}][%{&ff}] %l/%L %c%V %P '
 	else
-		let l:s .= ' '
+		let l:s .= ' %l %c'
 	endif
 
 	return l:s
@@ -106,8 +107,6 @@ endif
 let g:gutentags_generate_on_new = 0
 let g:gutentags_generate_on_missing = 1
 let g:gutentags_cscope_build_inverted_index = 1
-" mcscope="make -s cscope || cscope"
-let g:gutentags_cscope_executable = "mcscope"
 let g:gutentags_modules = ["ctags", "cscope"]
 
 " index from kernel
@@ -131,28 +130,30 @@ nmap <leader>lv :call SVED_Sync()<CR>
 
 " LSP
 packadd lsp
-call LspOptionsSet(#{aleSupport: v:true, autoComplete: v:false, showSignature: v:false})
+call LspOptionsSet(#{
+			\      aleSupport: v:true, ignoreMissingServer: v:true,
+			\      autoComplete: v:false, showSignature: v:false,
+			\      autoPopulateDiags: v:true, showDiagOnStatusLine: v:true
+			\    })
 call LspAddServer([#{
-			\    name: 'clangd',
 			\    filetype: ['c', 'cpp'],
 			\    path: '/usr/bin/clangd',
 			\    args: ['--background-index']
-			\  }])
-call LspAddServer([#{
-			\    name: 'Bash',
+			\  }, #{
 			\    filetype: ['sh', 'bash'],
 			\    path: '/usr/bin/bash-language-server',
 			\    args: ['start']
-			\  }])
-call LspAddServer([#{
-			\    name: 'Python',
+			\  }, #{
 			\    filetype: ['python'],
 			\    path: '/usr/bin/pylsp',
-			\  }])
-call LspAddServer([#{
+			\  }, #{
 			\    name: 'Vim',
 			\    filetype: ['vim'],
 			\    path: '/usr/local/sbin/vim-language-server',
+			\    args: ['--stdio']
+			\  }, #{
+			\    filetype: ['spec'],
+			\    path: '/usr/bin/rpm_lsp_server',
 			\    args: ['--stdio']
 			\  }])
 nnoremap  <leader>lh :LspHover<CR>
