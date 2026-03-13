@@ -99,11 +99,99 @@ deploy() {
     git push -f $remote "$branch":staging_"$branch"
 }
 
+grab_patch() {
+	# Fetch and apply the provided patches
+    set -e
+
+    if [ $# -lt 1 ]; then
+        echo "Usage $0 links"
+        exit 1
+    fi
+    for msg in "$@"; do
+        # TODO allow some cherry pick (if not all work)
+        # something like if next matches format, use and shift
+        b4 am --no-cover -l -s -3 "$msg"
+    done
+    git am -3 ./*.mbx
+    rm -f ./*.mbx
+}
+
+prepare_pr() {
+	# Prepare a pull request on the current branch
+    local tag remote who desc subject url output
+    declare -A ADDRESSES=(
+        [Steve]="Steven Rostedt <rostedt@goodmis.org>"
+        [Linus]="Linus Torvalds <torvalds@linux-foundation.org>"
+        [Me]="$(git config user.name) <$(git config user.email)>"
+    )
+    tag=$1
+    remote=${2:-glemco}
+    # get from branch name (for-linus)
+    who=$(git branch --show-current | sed 's/for-\([a-z]\+\)/\u\1/')
+    who=${3:-$who}
+    if [ $# -lt 1 ]; then
+        echo "Usage $0 tag [remote] [who]"
+        echo "Default remote $remote"
+        echo "Recipient selected from branch name $who"
+        exit 1
+    fi
+	# use HEAD~ to make sure we don't fail if the tag is there
+    from_tag=$(git describe --no-abbrev HEAD~)
+    output="0000-pull-request-$tag"
+    subject="[GIT PULL] rv fixes for ${tag#rv-}"
+    if desc=$(git config get branch."$(git branch --show-current)".description) ; then
+        local title=${desc%%$'\n'*}
+        local rest=${desc#*$'\n'}
+        # Check if the second line is empty (title format)
+        if [[ "${rest%%$'\n'*}" == "" ]]; then
+            subject="[GIT PULL] $title"
+        fi
+        git tag -s "$tag" -m "$desc"
+    else
+        git tag -s "$tag"
+    fi
+    if ! git show "$tag" | grep -q "BEGIN PGP SIGNATURE"; then
+        echo "Missing signature"
+    fi
+    url=$(git remote get-url "$remote")
+	if [ "$(git rev-list --count "$from_tag...$tag")" -eq 0 ]; then
+		echo No commit to pull..
+		exit 1
+	fi
+    #git push "$remote" HEAD
+    git push "$remote" "$tag"
+    {
+        echo "Subject: $subject"
+        echo
+        echo "$who,"
+        echo
+        git request-pull "$from_tag" "$url" "$tag"  | \
+			sed -e "s/tags\/$tag/$tag/" -e "/^${subject//\//\\/}$/{ N; /\n$/d; }"
+        echo
+		echo "To: ${ADDRESSES[$who]}"
+        git log --format='Cc: %aN <%aE>' "$from_tag...$tag" | sort -u
+    } > "$output"
+    echo git send-email \
+		--confirm always \
+		--no-validate \
+		--to linux-kernel@vger.kernel.org \
+		--to \""${ADDRESSES[$who]}"\" \
+		--to-cmd=true \
+		--cc-cmd=true \
+		"$output"
+}
+
 case "$0" in
     *iterate)
         iterate "$@"
         ;;
     *deploy)
         deploy "$@"
+        ;;
+    *grab-patch)
+        grab_patch "$@"
+        ;;
+    *prepare-pr)
+        prepare_pr "$@"
         ;;
 esac
