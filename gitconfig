@@ -20,3 +20,12 @@
 	update = !git fetch upstream && git rebase --committer-date-is-author-date upstream/HEAD
 [core]
 	excludesFile = ~/.gitignore
+[sendemail]
+	smtpserver = smtp.corp.redhat.com
+	confirm = auto
+	toCmd = ~/.local/bin/to_cmd
+	ccCmd = ~/.local/bin/cc_cmd
+[format]
+	signOff = true
+	useAutoBase = true
+	coverFromDescription = auto

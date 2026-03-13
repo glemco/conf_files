@@ -8,5 +8,7 @@ gitconfig: ~/.gitconfig
 gitignore: ~/.gitignore
 xopen: ~/.local/bin/xopen
 unlock-all: ~/.local/bin/unlock-all
+to_cmd.sh: ~/.local/bin/to_cmd
+cc_cmd.sh: ~/.local/bin/cc_cmd
 persistent_access: /etc/sudoers.d/persistent_access
 init.vim: ~/.config/nvim/init.vim
