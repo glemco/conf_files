@@ -16,7 +16,7 @@ USE_LATEXMK=$(shell command -v latexmk 2>&1)
 
 all: $(DOCNAME).pdf
 
-$(DOCNAME).pdf: $(SOURCE).tex $(OTHERS) $(BIB) $(PICS)
+$(SOURCE).pdf: $(SOURCE).tex $(OTHERS) $(BIB) $(PICS)
 ifneq ($(USE_LATEXMK),)
 	latexmk -pdf -pdflatex="$(LATEX)" -use-make $< || $(MAKE) fail
 else
@@ -26,7 +26,9 @@ else
 	$(LATEX) -draftmode $< #> /dev/null
 	$(LATEX) $< #> /dev/null
 endif
-	#mv $(SOURCE).pdf $(DOCNAME).pdf
+
+$(DOCNAME).pdf: $(SOURCE).pdf
+	mv $^ $@
 
 #may be needed to automate some steps
 %.aux: %.tex
@@ -63,4 +65,4 @@ spellcheck: $(SOURCE).tex
 	detex -e -- $^ | $(SPELLCHECK) $(DOCNAME).txt | tee spellcheck
 
 live:
-   latexmk -pvc $(SOURCE)
+	latexmk -pvc $(SOURCE)
