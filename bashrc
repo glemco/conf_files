@@ -29,15 +29,25 @@ fi
 
 unset rc
 
-RED="\[\e[31m\]"
-GREEN="\[\e[32m\]"
-YELLOW="\[\e[33m\]"
-BLUE="\[\e[34m\]"
-PURPLE="\[\e[35m\]"
-CYAN="\[\e[36m\]"
-BOLD="\[\e[1m\]"
-RESET="\[\e[0m\]"
-export PS1="${CYAN}[${CYAN}${BOLD}\u${RESET}${BLUE}@${CYAN}${BOLD}\h ${BLUE}\W${RESET}${CYAN}]${GREEN}${BOLD}\\$ ${RESET}"
+_get_ps1() {
+    local red="\[\e[31m\]"
+    local green="\[\e[32m\]"
+    local yellow="\[\e[33m\]"
+    local blue="\[\e[34m\]"
+    local purple="\[\e[35m\]"
+    local cyan="\[\e[36m\]"
+    local bold="\[\e[1m\]"
+    local reset="\[\e[0m\]"
+    local result=${red}'${?#0}'
+    local user="${cyan}${bold}\\u"
+    local at="${reset}${blue}@"
+    local host="${cyan}${bold}\\h"
+    local wdir="${blue}\\W"
+    local end="${green}${bold}\\$ ${reset}"
+    echo "${cyan}[${user}${at}${host} ${wdir}${reset}${cyan}]${result}${end}"
+}
+
+export PS1=$(_get_ps1)
 export HISTCONTROL+=":ignoreboth"
 export EDITOR="/usr/bin/vim"
 export MERGE="vimdiff"
