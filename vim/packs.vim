@@ -19,6 +19,7 @@ let g:ale_c_ccls_init_options = {
 \ }
 "let g:ale_c_ccls_executable = 'ccls -v 2'
 let g:ale_c_cc_executable = 'arm-none-eabi-gcc'
+let g:ale_c_clangd_options = '--query-driver=/opt/st/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc'
 let g:ale_fixers = {
 \   'c': [
 \       'clang-format',
@@ -217,6 +218,69 @@ let g:mkdp_markdown_css = $HOME.'/.vim/markdown.css'
 "let g:DiffUnit="Char"
 
 " Grayout
-let g:grayout_libclang_path = '/usr/lib/llvm-14/lib/'
+"let g:grayout_libclang_path = '/usr/lib/llvm-14/lib/'
 highlight PreprocessorGrayout cterm=italic ctermfg=DarkGray gui=italic guifg=#6c6c6c
 nmap <leader>g :GrayoutUpdate<CR>
+
+" cucumber
+let b:cucumber_steps_glob = '.vscode/steps/*.js'
+let b:match_all_types = v:true
+
+"let s:cucumber_language_server = '/home/monaco/Desktop/language-server/bin/cucumber-language-server.cjs'
+let s:cucumber_language_server = '/home/monaco/.local/bin/cucumber-language-server.cjs'
+
+" YouCompleteMe
+"let g:ycm_min_num_of_chars_for_completion = 99
+"let g:ycm_auto_trigger = 0
+"let g:ycm_language_server =
+"            \ [
+"            \   {
+"            \     'name': 'cucumber',
+"            \     'cmdline': [ s:cucumber_language_server, '--stdio' ],
+"            \     'filetypes': [ 'cucumber' ]
+"            \   }
+"            \ ]
+
+" LSP
+packadd lsp
+" can use this as custom handler
+function s:do_nothing(a, b) dict
+endfunction
+call LspOptionsSet(#{aleSupport: v:true, autoComplete: v:false})
+call LspAddServer([#{
+            \    name: 'clangd',
+            \    filetype: ['c', 'cpp'],
+            \    path: '/usr/bin/clangd',
+            \    args: ['--background-index', '--query-driver=/opt/st/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gcc']
+            \  }])
+call LspAddServer([#{
+            \    name: 'cucumber',
+            \    filetype: ['cucumber'],
+            \    debug: v:true,
+            \    path: s:cucumber_language_server,
+            \    args: ['--stdio'],
+            \    customRequestHandlers: {'workspace/semanticTokens/refresh': function('s:do_nothing') }
+            \  }])
+call LspAddServer([#{
+            \    name: 'Jenkinsfile',
+            \    filetype: ['groovy'],
+            \    path: '/usr/bin/java',
+            \    args: ['-jar', '/home/monaco/.local/share/groovy-language-server-all.jar']
+            \  }])
+call LspAddServer([#{
+            \    name: 'Javascript',
+            \    filetype: ['typescript', 'javascript'],
+            \    path: '/home/monaco/.local/bin/typescript-language-server',
+            \    args: ['--stdio']
+            \  }])
+call LspAddServer([#{
+            \    name: 'Bash',
+            \    filetype: ['sh', 'bash'],
+            \    path: '/home/monaco/.local/bin/bash-language-server',
+            \    args: ['start']
+            \  }])
+nnoremap  <leader>lh :LspHover<CR>
+nnoremap  <leader>la :LspCodeAction<CR>
+nnoremap  <leader>ld :LspDocumentSymbol<CR>
+
+au BufNewFile,BufRead,BufEnter packadd lsp
