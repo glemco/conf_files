@@ -89,21 +89,6 @@ else
 
 endif " has("autocmd")
 
-if has("cscope") && filereadable("/usr/bin/cscope")
-   set csprg=/usr/bin/cscope
-   set csto=0
-   set cst
-   set nocsverb
-   " add any database in current directory
-   if filereadable("cscope.out")
-      cs add $PWD/cscope.out
-   " else add database pointed to by environment
-   elseif $CSCOPE_DB != ""
-      cs add $CSCOPE_DB
-   endif
-   set csverb
-endif
-
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
@@ -145,6 +130,10 @@ let &guicursor = &guicursor . ",a:blinkon0"
 " compatible.
 packadd matchit
 
+" The editorconfig plugin reads the .editorconfig file in your project to
+" apply the specified settings.
+packadd! editorconfig
+
 " All maintenance files together, leave in cwd if the folder is not there
 set backupdir=~/.vim/tmp/bak//,.
 set undodir=~/.vim/tmp/un//,.
@@ -158,7 +147,6 @@ set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 
 " Command completion
 set wildmode=longest,full
-set wildmenu
 
 " Insert mode completion up to longest common match
 "FIXME quite weird, try to find something better
@@ -180,22 +168,9 @@ map Y y$
 " Keep edited files as hidden buffers (can change without saving)
 set hidden
 
-" Smarter diff recognition
-if has('nvim-0.3.2') || has("patch-8.1.0360")
-  set diffopt=filler,internal,algorithm:histogram,indent-heuristic
-endif
-
 " Statusbar also with one window open
 set laststatus=2
 "set showtabline=2
-
-" Nice automatic folds, leaving the manual ones available
-" (somewhat weird sometimes)
-augroup vimrc
-    let g:xml_syntax_folding=1
-    au BufReadPre * setlocal foldmethod=syntax | setlocal foldlevel=99
-    au BufWinEnter * if &fdm == 'indent' | setlocal foldmethod=manual | endif
-augroup END
 
 " Highlight trailing spaces
 " http://vim.wikia.com/wiki/Highlight_unwanted_spaces
@@ -206,21 +181,21 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
-" do it just for C/C++ files?
-" 80 characters line
-"set colorcolumn=81
-"execute "set colorcolumn=" . join(range(81,335), ',')
-"highlight ColorColumn ctermbg=Black ctermfg=DarkRed
-
 function! RunCurr()
+    let $nproc = system("nproc") * 5/4
     if findfile("Makefile") != ""
-        make!
+        if (&filetype == "rst" || &filetype == "txt")
+            make! -j $nproc htmldocs
+        else
+            make! -j $nproc
+        endif
     elseif (&filetype == "tex" || &filetype == "plaintex")
         execute("!latexmk *.tex")
     elseif (&filetype == "go")
         execute("!go run " . bufname("%"))
-    elseif (&filetype == "cucumber")
-        call Run_Cucumber_Test(bufname("%"))
+    elseif (&filetype == "xml")
+        " assume beaker job
+        execute("!bkr job-submit " . bufname("%"))
     elseif (&filetype == "groovy")
         "cannot execute this, restore the syntax sync behaviour
         syntax sync fromstart
@@ -229,11 +204,12 @@ function! RunCurr()
         execute("!perl " . bufname("%"))
     endif
 endfunction
-"set makeprg=make\ -s
-set errorformat^=%-G%.%#arm-none-eabi-gcc%.%#
 
 "ignore files for vimgrep
-set wildignore+=cscope.*,tags,*.o,*.ko
+set wildignore+=cscope.*,tags,GTAGS,*.o,*.ko
+
+" avoid additional space after punctuation with J
+set nojoinspaces
 
 " Shortcuts
 nnoremap <F9>  :set spell! spell?<CR>
@@ -257,24 +233,10 @@ if filereadable('/home/'.$USER.'/.vim/packs.vim')
 	source /home/$USER/.vim/packs.vim
 endif
 
+" defined in bashrc
 if filereadable($FZFPATH.'/fzf.vim')
 	source $FZFPATH/fzf.vim
 endif
-
-function Run_Cucumber_Test(file)
-  "Run Cucumber Test
-  let file=trim(system("realpath ".a:file))
-  execute "!. tasks.sh &>/dev/null && interactive=-it Run_Cucumber_Test" l:file "; res=$? ; notify-send -e $(basename" l:file ") $([ $res -eq 0 ] || echo failed)"
-endfunction
-command -nargs=1 RunCucumberTest call Run_Cucumber_Test(expand(<q-args>))
-function Open_Cucumber_Report()
-  execute "!. tasks.sh &>/dev/null && Open_Cucumber_Report"
-endfunction
-command OpenCucumberReport call Open_Cucumber_Report()
-function Format_All()
-    execute "!cd $(git rev-parse --show-toplevel) && . tasks.sh && Run_C_Code_Formatter -i"
-endfunction
-command FormatAll call Format_All()
 
 " binary read
 nmap <Leader>br :%!xxd<CR> :set filetype=xxd<CR>
@@ -283,14 +245,14 @@ nmap <Leader>br :%!xxd<CR> :set filetype=xxd<CR>
 nmap <Leader>bw :%!xxd -r<CR> :set binary<CR> :set filetype=<CR>
 
 " restore vim90 highlight patterns
-function! FixTheme()
+function! FixTheme(_)
     if &background ==# 'light'
         hi Visual term=reverse ctermbg=7 ctermfg=NONE guibg=LightGrey guifg=NONE
     else
         hi Visual term=reverse ctermbg=242 ctermfg=NONE guibg=DarkGrey guifg=NONE
     endif
 endfunction
-call FixTheme()
+autocmd VimEnter * call timer_start(500, 'FixTheme')
 
 " Open tags in vertical splits (cannot remap existing one?!)
 nnoremap <C-W><C-V>[ :vert winc ]<CR>
