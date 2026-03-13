@@ -119,20 +119,19 @@ grab_patch() {
 prepare_pr() {
 	# Prepare a pull request on the current branch
 	local tag remote who desc subject url output
-	declare -A ADDRESSES=(
-		[Steve]="Steven Rostedt <rostedt@goodmis.org>"
-		[Linus]="Linus Torvalds <torvalds@linux-foundation.org>"
-		[Me]="$(git config user.name) <$(git config user.email)>"
-	)
 	tag=$1
 	remote=${2:-glemco}
 	# get from branch name (for-linus)
-	who=$(git branch --show-current | sed 's/for-\([a-z]\+\)/\u\1/')
+	who=$(git branch --show-current | sed 's/for-\([a-z]\+\)/\1/')
 	who=${3:-$who}
 	if [ $# -lt 1 ]; then
 		echo "Usage $0 tag [remote] [who]"
 		echo "Default remote $remote"
 		echo "Recipient selected from branch name $who"
+		exit 1
+	fi
+	if ! git send-email --dump-aliases | grep "$who"; then
+		echo "No address for $who"
 		exit 1
 	fi
 	# use HEAD~ to make sure we don't fail if the tag is there
@@ -152,33 +151,113 @@ prepare_pr() {
 	fi
 	if ! git show "$tag" | grep -q "BEGIN PGP SIGNATURE"; then
 		echo "Missing signature"
+		exit 1
 	fi
 	url=$(git remote get-url "$remote")
 	if [ "$(git rev-list --count "$from_tag...$tag")" -eq 0 ]; then
 		echo No commit to pull..
 		exit 1
 	fi
-	#git push "$remote" HEAD
 	git push "$remote" "$tag"
 	{
 		echo "Subject: $subject"
 		echo
-		echo "$who,"
+		echo "${who^},"
 		echo
 		git request-pull "$from_tag" "$url" "$tag"  | \
 			sed -e "s/tags\/$tag/$tag/" -e "/^${subject//\//\\/}$/{ N; /\n$/d; }"
 		echo
-		echo "To: ${ADDRESSES[$who]}"
+		echo "To: $(git send-email --translate-aliases <<< "$who")"
 		git log --format='Cc: %aN <%aE>' "$from_tag...$tag" | sort -u
 	} > "$output"
-echo git send-email \
-	--confirm always \
-	--no-validate \
-	--to linux-kernel@vger.kernel.org \
-	--to \""${ADDRESSES[$who]}"\" \
-	--to-cmd=true \
-	--cc-cmd=true \
-	"$output"
+	git send-email \
+		--confirm always \
+		--no-validate \
+		--to linux-kernel@vger.kernel.org \
+		--to "$who" \
+		--to-cmd=true \
+		--cc-cmd=true \
+		"$output"
+}
+
+build() {
+	# Build check all patches since upstream
+	local args cmd
+
+	args="$*"
+	if [ "${args#*-- }" != "$args" ]; then
+		cmd=${args#*-- }
+		args=${args%--*}
+	fi
+	if [ "${cmd// }" == "" ]; then
+		cmd="yes | make -s -j$(nproc)"
+	fi
+
+	# shellcheck disable=SC2086
+	git rebase --exec "git log -1 --pretty=%s" --exec "$cmd" $args
+}
+
+mail_trailers() {
+	# Reword each commit comparing it with the content of an mbx file
+	local mbx
+	local msg=$1
+
+	if [ -n "$msg" ]; then
+		mbx=$(b4 am --no-cover "$msg" 2>&1 | grep "git am" | cut -d/ -f2)
+	else
+		mbx=$(find . -maxdepth 1 -name \*.mbx | head -n1)
+	fi
+
+	trap "rm -rf /tmp/mails \$mbx" EXIT
+	rm -rf /tmp/mails
+	mkdir /tmp/mails
+	git mailsplit -o/tmp/mails "$mbx"
+	for mail in /tmp/mails/*; do
+		{
+			git mailinfo /tmp/msg /tmp/patch < "$mail" \
+				| grep "^Subject:" | sed 's/^Subject: //'
+			echo
+			sed "s/^Signed-off-by: $(git config get user.name) <$(git config get user.email)>//" /tmp/msg
+		} > "$mail.msg"
+	done
+	rm -f /tmp/{msg,patch}
+
+	echo "$mbx preprocessed"
+
+	curmsg() {
+		git show -s --format=^%s$ "$@" | grep -rlf- /tmp/mails || echo none
+		#grep -rl "^$(git show -s --format=%s "$@")$" /tmp/mails || echo none
+	}
+	export -f curmsg
+	# The editor opens the relevant patch message deleting everything else
+	export GIT_EDITOR="vim \$(curmsg) +'set bt=nofile' -d"
+	start=$(git log --grep="$(grep Subject "$mbx" | sed 's/.*] //' | head -n1)" --format=%H)
+	# Use a specialised editor for the todo, just reword if different
+	# shellcheck disable=SC2016
+	export GIT_SEQUENCE_EDITOR="awk -i inplace '"'
+$1 == "pick" {
+	git_msg = mbx_msg = ""
+	hash = $2
+
+	cmd = "curmsg " hash
+	while ((cmd | getline line) > 0) mbx = line
+	close(cmd)
+	if (mbx == "none") { print ; next }
+
+	cmd = "git show -s --format=%B " hash
+	while ((cmd | getline line) > 0)
+        if (line) git_msg = git_msg line "\n"
+	close(cmd)
+
+	while ((getline line < mbx) > 0)
+        if (line) mbx_msg = mbx_msg line "\n"
+	close(mbx)
+
+	if (git_msg != mbx_msg) $1 = "reword"
+}
+{ print }
+'"'"
+	git rebase -i "$start~"
 }
 
 case "$0" in
@@ -193,5 +272,11 @@ case "$0" in
 		;;
 	*prepare-pr)
 		prepare_pr "$@"
+		;;
+	*build)
+		build "$@"
+		;;
+	*mail-trailers)
+		mail_trailers "$@"
 		;;
 esac

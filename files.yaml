@@ -14,5 +14,7 @@ git-extras.sh:
   - ~/.local/bin/git-deploy
   - ~/.local/bin/git-grab-patch
   - ~/.local/bin/git-prepare-pr
+  - ~/.local/bin/git-build
+  - ~/.local/bin/git-mail-trailers
 persistent_access: /etc/sudoers.d/persistent_access
 latexmkrc: ~/.latexmkrc
