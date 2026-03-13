@@ -1,4 +1,4 @@
-Defaults    env_keep += "EDITOR PATH"
+Defaults    env_keep += "EDITOR PATH XDG_DATA_DIRS"
 
 ## Allows to use password only once for wheel group
 #Defaults:%wheel !tty_tickets,timestamp_timeout=500

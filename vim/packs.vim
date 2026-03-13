@@ -121,7 +121,7 @@ endfunction
 
 let g:crystalline_statusline_fn = 'StatusLine'
 let g:crystalline_tabline_fn = 'TabLine'
-let g:crystalline_theme = 'badwolf'
+let g:crystalline_theme = 'solarized'
 
 " LiteCorrect
 " also set spell and dictionary completion to test types
@@ -187,7 +187,7 @@ augroup cdevel
         cs add /mnt/nfs_ultrascale/linux-xlnx/cscope.out /mnt/nfs_ultrascale/linux-xlnx/
         setlocal cscopeverbose
         setlocal colorcolumn=81
-        highlight ColorColumn ctermbg=Black ctermfg=DarkRed
+        highlight ColorColumn ctermbg=None ctermfg=DarkRed
     endfunction
 	autocmd FileType c,cpp call CDevel()
 augroup END
