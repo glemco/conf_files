@@ -1,0 +1,14 @@
+[user]
+	name = glemco
+	email = 32201227+glemco@users.noreply.github.com
+[diff]
+	tool="vimdiff"
+	colorMoved = default
+[merge]
+	tool="vimdiff"
+[color]
+	ui = auto
+[pull]
+	rebase = true
+[init]
+	defaultBranch = master
