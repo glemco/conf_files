@@ -47,7 +47,30 @@ _get_ps1() {
     echo "${cyan}[${user}${at}${host} ${wdir}${reset}${cyan}]${result}${end}"
 }
 
-export PS1=$(_get_ps1)
+_set_ps1() {
+    local red="\[\e[31m\]"
+    local green="\[\e[32m\]"
+    local yellow="\[\e[33m\]"
+    local blue="\[\e[34m\]"
+    local purple="\[\e[35m\]"
+    local cyan="\[\e[36m\]"
+    local bold="\[\e[1m\]"
+    local reset="\[\e[0m\]"
+    local result=${red}'${?#0}'
+
+    export PROMPT_COLOR=36
+    export PROMPT_DIR_COLOR=34
+	local color="\[\e[${PROMPT_COLOR}m\]"
+	local dir_color="\[\e[${PROMPT_DIR_COLOR}m\]"
+    export PROMPT_START="${color}["
+    export PROMPT_USERHOST='\u'"${reset}${dir_color}@${color}${bold}"'\h'
+    export PROMPT_END="${color}]${result}${green}${bold}"
+    export PROMPT_DIRECTORY="\W"
+    export PROMPT_SEPARATOR=" "
+}
+
+_set_ps1
+
 export HISTCONTROL+=":ignoreboth"
 export EDITOR="/usr/bin/vim"
 export MERGE="vimdiff"
