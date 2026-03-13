@@ -116,4 +116,4 @@ fi
 
 export MODULEPATH+=":$HOME/.modulefiles/"
 export GIT_USER_NAME="glemco"
-export GIT_USER_EMAIL="foo@bar.org"
+export GIT_USER_EMAIL="32201227+glemco@users.noreply.github.com"
