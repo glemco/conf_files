@@ -29,15 +29,14 @@ fi
 
 unset rc
 
-RED="\[$(tput setaf 1)\]"
-GREEN="\[$(tput setaf 2)\]"
-YELLOW="\[$(tput setaf 3)\]"
-BLUE="\[$(tput setaf 4)\]"
-PURPLE="\[$(tput setaf 5)\]"
-CYAN="\[$(tput setaf 6)\]"
-BOLD="\[$(tput bold)\]"
-BLINK="\[$(tput blink)\]"
-RESET="\[$(tput sgr0)\]"
+RED="\[\e[31m\]"
+GREEN="\[\e[32m\]"
+YELLOW="\[\e[33m\]"
+BLUE="\[\e[34m\]"
+PURPLE="\[\e[35m\]"
+CYAN="\[\e[36m\]"
+BOLD="\[\e[1m\]"
+RESET="\[\e[0m\]"
 export PS1="${CYAN}[${CYAN}${BOLD}\u${RESET}${BLUE}@${CYAN}${BOLD}\h ${BLUE}\W${RESET}${CYAN}]${GREEN}${BOLD}\\$ ${RESET}"
 export HISTCONTROL+=":ignoreboth"
 export EDITOR="/usr/bin/vim"
@@ -94,3 +93,5 @@ if type flatpak &> /dev/null; then
 fi
 
 export MODULEPATH+=":$HOME/.modulefiles/"
+export GIT_USER_NAME="glemco"
+export GIT_USER_EMAIL="foo@bar.org"

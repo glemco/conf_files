@@ -62,9 +62,20 @@ Type (${PURPLE}q$RST) to exit. "
 				echo "Creating a backup in $location.bak"
 				$SUDO mv "$location" "$location".bak
 			fi
-			$SUDO ln -sf `realpath "$file"` "$location" 
+			$SUDO ln -sf `realpath "$file"` "$location"
 			;;
 		*)
 			echo "Choose either y, n or e"
 	esac
 done
+
+git_user_name=$(git config user.name | tr -d '\n')
+git_user_email=$(git config user.email | tr -d '\n')
+if [ "$GIT_USER_NAME" != "$git_user_name" -o \
+    "$GIT_USER_EMAIL" != "$git_user_email" ]; then
+    echo "Updating username and email environment variables from gitconfig"
+    sed -i ~/.bashrc -f - << EOF
+s/GIT_USER_NAME=.*/GIT_USER_NAME="$git_user_name"/
+s/GIT_USER_EMAIL=.*/GIT_USER_EMAIL="$git_user_email"/
+EOF
+fi
