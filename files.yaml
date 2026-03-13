@@ -10,5 +10,3 @@ xopen: ~/.local/bin/xopen
 unlock-all: ~/.local/bin/unlock-all
 persistent_access: /etc/sudoers.d/persistent_access
 init.vim: ~/.config/nvim/init.vim
-nextcloudbridge.py: ~/.local/share/nextcloudbridge.py
-nextcloudbridge@.service: ~/.config/systemd/user/nextcloudbridge@.service
