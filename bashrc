@@ -48,44 +48,54 @@ FZFPATH=/usr/share/fzf/shell/ #fedora
 #FZFPATH=/usr/share/fzf/ #arch
 #FZFPATH=/usr/share/doc/fzf/examples/ #ubuntu
 if [ -f $FZFPATH/key-bindings.bash ] ; then
-	. $FZFPATH/key-bindings.bash
+    . $FZFPATH/key-bindings.bash
 fi
 if [ -f $FZFPATH/completion.bash ] ; then
-	. $FZFPATH/completion.bash
+    . $FZFPATH/completion.bash
 fi
 #go back to find the root of the project (or home or system root)
 _find_root() {
-	dir=$PWD
-	while ! [ -d $dir/.git -o -d $dir/.svn -o \
+    dir=$PWD
+    while ! [ -d $dir/.git -o -d $dir/.svn -o \
         "`realpath -L $dir`" == "$HOME" -o \
-		"`realpath -L $dir`" == "/" ]; do
-		dir+=/..
-	done
-	if [ "$PWD" != "$dir" ]; then
-		realpath -L $dir --relative-to=$PWD
-	fi
+        "`realpath -L $dir`" == "/" ]; do
+            dir+=/..
+    done
+    if [ "$PWD" != "$dir" ]; then
+        realpath -L $dir --relative-to=$PWD
+    else
+        : #echo .
+    fi
 }
 export -f _find_root
+_exclude_self() {
+    dir=$(_find_root)
+    if [ "$dir" != "" ]; then
+        printf "%s" "-E $(realpath --relative-to=$dir .)"
+    fi
+}
 
 export FD_DEFAULT_COMMAND='fd --follow'
 if type fd &> /dev/null; then
-	export FZF_DEFAULT_COMMAND='$FD_DEFAULT_COMMAND . $(_find_root) .'
-	#export FZF_DEFAULT_COMMAND='fd --follow'
+    export FZF_DEFAULT_COMMAND='$FD_DEFAULT_COMMAND --search-path . --search-path $(_find_root) $(_exclude_self)'
+    #export FZF_DEFAULT_COMMAND='$FD_DEFAULT_COMMAND . $(_find_root) .'
+    export FIND_DEFAULT_COMMAND=$FD_DEFAULT_COMMAND
 else
-	FZF_MAX_DEPTH=6
-	export FZF_DEFAULT_COMMAND="command find -L . -depth -mindepth 1 -maxdepth $FZF_MAX_DEPTH \
-		\\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) \
-		-prune \
-		-o -type f -print \
-		-o -type d -print \
-		-o -type l -print 2> /dev/null | cut -b3-"
+    FZF_MAX_DEPTH=6
+    export FZF_DEFAULT_COMMAND="command find -L . -depth -mindepth 1 -maxdepth $FZF_MAX_DEPTH \
+        \\( -path '*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \\) \
+        -prune \
+        -o -type f -print \
+        -o -type d -print \
+        -o -type l -print 2> /dev/null | cut -b3-"
+    export FIND_DEFAULT_COMMAND='find -L'
 fi
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 _fzf_compgen_path() {
-  $FD_DEFAULT_COMMAND . "$1"
+    $FIND_DEFAULT_COMMAND . "$1"
 }
 _fzf_compgen_dir() {
-  $FD_DEFAULT_COMMAND --type d . "$1"
+    $FIND_DEFAULT_COMMAND --type d . "$1"
 }
 
 if type flatpak &> /dev/null; then
