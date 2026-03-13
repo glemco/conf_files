@@ -29,15 +29,15 @@ export MERGE="vimdiff"
 export PYTHONPATH="."
 
 # Source fuzzy find bindings
-if [ -f /usr/share/fzf/shell/key-bindings.bash ] ; then
-	. /usr/share/fzf/shell/key-bindings.bash
+FZFPATH=/usr/share/fzf/shell/ #fedora
+#FZFPATH=/usr/share/fzf/ #arch
+#FZFPATH=/usr/share/doc/fzf/examples/ #ubuntu
+if [ -f $FZFPATH/key-bindings.bash ] ; then
+	. $FZFPATH/key-bindings.bash
 fi
-if [ -f /usr/share/fzf/key-bindings.bash ] ||
-	[ -f /usr/share/fzf/completion.bash ] ; then
-	. /usr/share/fzf/key-bindings.bash 2> /dev/null | true
-	. /usr/share/fzf/completion.bash 2> /dev/null | true
-fi #for archlinux (or general, never fail)
-
+if [ -f $FZFPATH/completion.bash ] ; then
+	. $FZFPATH/completion.bash
+fi
 #go back to find the root of the project (or home or system root)
 _find_root() {
 	dir=$PWD

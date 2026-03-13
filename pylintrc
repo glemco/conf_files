@@ -140,11 +140,13 @@ disable=print-statement,
         exception-escape,
         comprehension-escape,
         invalid-name,
-		no-self-use,
-		blacklisted-name,
-		missing-function-docstring,
-		missing-class-docstring,
-		line-too-long
+        no-self-use,
+        blacklisted-name,
+        missing-function-docstring,
+        missing-class-docstring,
+        line-too-long,
+        too-few-public-methods,
+        too-many-branches
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -549,10 +551,10 @@ preferred-modules=
 [DESIGN]
 
 # Maximum number of arguments for function / method.
-max-args=5
+max-args=7
 
 # Maximum number of attributes for a class (see R0902).
-max-attributes=7
+max-attributes=10
 
 # Maximum number of boolean expressions in an if statement (see R0916).
 max-bool-expr=5

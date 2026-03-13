@@ -11,4 +11,8 @@
 [pull]
 	rebase = true
 [init]
-	defaultBranch = master
+	defaultBranch = main
+[rebase]
+	autoStash = true
+[svn]
+	rmdir = true
