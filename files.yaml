@@ -5,6 +5,7 @@ latexmkrc: ~/.latexmkrc
 vimrc: ~/.vimrc
 vim: ~/.vim/
 gitconfig: ~/.gitconfig
+gitignore: ~/.gitignore
 xopen: ~/.local/bin/xopen
 unlock-all: ~/.local/bin/unlock-all
 persistent_access: /etc/sudoers.d/persistent_access
