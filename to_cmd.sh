@@ -12,8 +12,8 @@ patch=$1
 cover_letter=$(grep -z 0000 /proc/$PPID/cmdline | tr -d '\0')
 
 if [ -f to_file ]; then
-    cat to_file
-    exit 0
+	cat to_file
+	exit 0
 fi
 
 # some subsystems have further divisions get_maintainer doesn't understand
@@ -21,11 +21,11 @@ fi
 # M: Foo Bar <foo@bar.com> (SUB_SUBSYSTEM)
 # Add here other addresses that should not be used
 get_blacklisted() {
-    if [ -f MAINTAINERS ]; then
-        grep 'M:\s[a-Z ]\+<[a-z@.]\+> ([^)]\+)' MAINTAINERS | \
-            sed 's/ (.*//' | sed 's/M:\s//'
-    fi
-    echo "Daniel Bristot de Oliveira <bristot@kernel.org>"
+	if [ -f MAINTAINERS ]; then
+		grep 'M:\s[a-Z ]\+<[a-z@.]\+> ([^)]\+)' MAINTAINERS | \
+			sed 's/ (.*//' | sed 's/M:\s//'
+	fi
+	echo "Daniel Bristot de Oliveira <bristot@kernel.org>"
 }
 
 # parse from the patch
@@ -33,23 +33,23 @@ grep ^To: "$patch" | sed 's/To: //'
 
 # the cover letter is not a patch
 if echo "$patch" | grep -q 0000; then
-    exit 0
+	exit 0
 fi
 
 # parse from the cover letter
 if [ -n "$cover_letter" ]; then
-    grep ^To: "$cover_letter" | sed 's/To: //'
+	grep ^To: "$cover_letter" | sed 's/To: //'
 fi
 
 # add only lists and maintainers by default
 if [ -x scripts/get_maintainer.pl ]; then
-    temp_file=$(mktemp)
-    nom=$([ -n "$NOMAINT" ] && echo --nom || echo --m)
-    fixes=$([ -n "$NOFIX" ] && echo --nofixes || echo --fixes)
-    rolestats=$([ -n "$VERBOSE" ] && echo --rolestats || echo --norolestats)
-    keywords=$([ -n "$KEYWORDS" ] && echo --keywords || echo --nokeywords)
-    get_blacklisted > "$temp_file"
-    scripts/get_maintainer.pl --nor "$nom" --nogit --nogit-fallback "$fixes" "$rolestats" "$keywords" "$patch" | \
-        grep -v -f "$temp_file"
-    rm -f "$temp_file"
+	temp_file=$(mktemp)
+	nom=$([ -n "$NOMAINT" ] && echo --nom || echo --m)
+	fixes=$([ -n "$NOFIX" ] && echo --nofixes || echo --fixes)
+	rolestats=$([ -n "$VERBOSE" ] && echo --rolestats || echo --norolestats)
+	keywords=$([ -n "$KEYWORDS" ] && echo --keywords || echo --nokeywords)
+	get_blacklisted > "$temp_file"
+	scripts/get_maintainer.pl --nor "$nom" --nogit --nogit-fallback "$fixes" "$rolestats" "$keywords" "$patch" | \
+		grep -v -f "$temp_file"
+	rm -f "$temp_file"
 fi
