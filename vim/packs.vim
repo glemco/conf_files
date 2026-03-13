@@ -301,3 +301,7 @@ au BufNewFile,BufRead,BufEnter packadd lsp
 
 " EditorConfig (bundled)
 packadd editorconfig
+
+" Previm
+let g:previm_open_cmd = 'xdg-open'
+let g:previm_show_header = 0
