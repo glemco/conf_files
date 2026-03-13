@@ -208,6 +208,19 @@ autocmd BufWinLeave * call clearmatches()
 "execute "set colorcolumn=" . join(range(81,335), ',')
 "highlight ColorColumn ctermbg=Black ctermfg=DarkRed
 
+function! RunCurr()
+    if findfile("Makefile") != ""
+        make!
+    elseif (&filetype == "tex" || &filetype == "plaintex")
+        execute("!latexmk *.tex")
+    elseif (&filetype == "go")
+        execute("!go run " . bufname("%"))
+    else
+        "perl reads the shebang, no need to execute
+        execute("!perl " . bufname("%"))
+    endif
+endfunction
+
 " Shortcuts
 nnoremap <F9>  :set spell! spell?<CR>
 nnoremap <F8>  :set list! list?<CR>
@@ -215,6 +228,7 @@ nnoremap <F7>  :copen<CR>
 nnoremap <F6>  :set nu! nu?<CR>
 "nnoremap <F5>  :syntax sync fromstart<CR>
 nnoremap <F5>  :make!<CR><CR>
+nnoremap <F5>  :call RunCurr()<CR>
 nnoremap <F4>  :noh<CR>
 nnoremap <F3>  :Lex<CR>
 

@@ -8,10 +8,26 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
 # User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+	for rc in ~/.bashrc.d/*; do
+		if [ -f "$rc" ]; then
+			. "$rc"
+		fi
+	done
+fi
+
+unset rc
 
 RED="\[$(tput setaf 1)\]"
 GREEN="\[$(tput setaf 2)\]"
@@ -51,8 +67,9 @@ _find_root() {
 }
 export -f _find_root
 
+export FD_DEFAULT_COMMAND='fd --follow'
 if type fd &> /dev/null; then
-	export FZF_DEFAULT_COMMAND='fd --follow . $(_find_root) .'
+	export FZF_DEFAULT_COMMAND='$FD_DEFAULT_COMMAND . $(_find_root) .'
 	#export FZF_DEFAULT_COMMAND='fd --follow'
 else
 	FZF_MAX_DEPTH=6
@@ -65,10 +82,10 @@ else
 fi
 export FZF_CTRL_T_COMMAND=$FZF_DEFAULT_COMMAND
 _fzf_compgen_path() {
-  $FZF_DEFAULT_COMMAND . "$1"
+  $FD_DEFAULT_COMMAND . "$1"
 }
 _fzf_compgen_dir() {
-  $FZF_DEFAULT_COMMAND --type d . "$1"
+  $FD_DEFAULT_COMMAND --type d . "$1"
 }
 
 if type flatpak &> /dev/null; then
