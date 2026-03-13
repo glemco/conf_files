@@ -1,7 +1,5 @@
 bashrc: ~/.bashrc
 inputrc: ~/.inputrc
-pylintrc: ~/.pylintrc
-latexmkrc: ~/.latexmkrc
 vimrc: ~/.vimrc
 vim: ~/.vim/
 gitconfig: ~/.gitconfig
@@ -16,4 +14,4 @@ git-extras.sh:
   - ~/.local/bin/git-grab-patch
   - ~/.local/bin/git-prepare-pr
 persistent_access: /etc/sudoers.d/persistent_access
-init.vim: ~/.config/nvim/init.vim
+latexmkrc: ~/.latexmkrc
