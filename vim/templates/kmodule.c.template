@@ -11,7 +11,7 @@
 #include <linux/init.h>
 
 static int __init {{FILE}}_init(void) {
-    return 0;
+	return 0;
 }
 
 static void __exit {{FILE}}_exit(void) {
