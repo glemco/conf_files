@@ -10,14 +10,21 @@
 
 patch=$1
 
+if [ -f to_file ]; then
+    cat to_file
+    exit 0
+fi
+
 # some subsystems have further divisions get_maintainer doesn't understand
 # try to ignore those in the automatic selection. E.g. :
 # M: Foo Bar <foo@bar.com> (SUB_SUBSYSTEM)
+# Add here other addresses that should not be used
 get_blacklisted() {
     if [ -f MAINTAINERS ]; then
         grep 'M:\s[a-Z ]\+<[a-z@.]\+> ([^)]\+)' MAINTAINERS | \
             sed 's/ (.*//' | sed 's/M:\s//'
     fi
+    echo "Daniel Bristot de Oliveira <bristot@kernel.org>"
 }
 
 # parse from the patch

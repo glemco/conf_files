@@ -21,4 +21,5 @@ fi
 
 if [ -n "$cover_letter" ]; then
     grep ^To: "$cover_letter" | sed 's/To: //'
+    grep ^Cc: "$cover_letter" | sed 's/Cc: //'
 fi
